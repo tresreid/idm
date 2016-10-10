@@ -1,0 +1,16 @@
+#put card customizations here (change top and higgs mass for example)
+set param_card mass 6 172.5
+set param_card yukawa 6 172.5
+set param_card dminputs 4 0.0
+set param_card dminputs 5 0.0
+set param_card dminputs 6 0.0
+set param_card dminputs 7 0.0
+set param_card dminputs 8 0.0
+set param_card dminputs 9 0.0
+set param_card dminputs 16 0.5
+set param_card dminputs 17 0.0
+set param_card dminputs 18 0.5
+set param_card dminputs 19 0.0
+set param_card mass 55  MED
+set param_card mass 18  XMASS
+set param_card DECAY 55 AUTO
