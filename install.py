@@ -37,14 +37,10 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gqV=gq
     gqA=gq
     #Diagonals for monotop (set it to 0 for now)
-    gqVTop=gq*2.
-    gqATop=gq*2.
     gqVii=0
     gqAii=0
     gdmV=gdm
     gdmA=gdm
-    gdmVTop=gdm*2.
-    gdmATop=gdm*2.
     gSw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
     gPw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
     gSb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
@@ -55,12 +51,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqV=0
         gqA=0
-        gqVTop=0
-        gqATop=0
         gdmV=0
         gdmA=0
-        gdmVTop=0
-        gdmATop=0
         gPw=0
         gPb=0
     elif proc == 806:
@@ -68,12 +60,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmS=0
         gqV=0
         gqA=0
-        gqVTop=0
-        gqATop=0
         gdmV=0
         gdmA=0
-        gdmVTop=0
-        gdmATop=0
         gSw=0
         gSb=0
         gSinTheta=0
@@ -84,8 +72,6 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqV=0
         gdmV=0
-        gdmVTop=0
-        gqVTop=0
         gSw=0
         gSb=0
         gPw=0
@@ -98,8 +84,6 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqA=0
         gdmA=0
-        gdmATop=0
-        gqATop=0
         gSw=0
         gSb=0
         gPw=0
@@ -120,14 +104,10 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
                     tmpline = tmpline.replace('X_gDMP_X',str(gdmP))
                     tmpline = tmpline.replace('X_gV_X'  ,str(gqV))
                     tmpline = tmpline.replace('X_gA_X'  ,str(gqA))
-                    tmpline = tmpline.replace('X_gVTop_X',str(gqVTop))
-                    tmpline = tmpline.replace('X_gATop_X',str(gqATop))
                     tmpline = tmpline.replace('X_gVii_X',str(gqVii))
                     tmpline = tmpline.replace('X_gAii_X',str(gqAii))
                     tmpline = tmpline.replace('X_gDMV_X',str(gdmV))
                     tmpline = tmpline.replace('X_gDMA_X',str(gdmA))
-                    tmpline = tmpline.replace('X_gDMVTop_X',str(gdmVTop))
-                    tmpline = tmpline.replace('X_gDMATop_X',str(gdmATop))
                     tmpline = tmpline.replace('X_gSw_X' ,str(gSw))
                     tmpline = tmpline.replace('X_gPw_X' ,str(gPw))
                     tmpline = tmpline.replace('X_gSb_X' ,str(gSb))
