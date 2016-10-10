@@ -43,6 +43,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gqAii=0
     gdmV=gdm
     gdmA=gdm
+    gdmVTop=gdm*2.
+    gdmATop=gdm*2.
     gSw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
     gPw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
     gSb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
@@ -53,10 +55,12 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqV=0
         gqA=0
-        gdmV=0
-        gdmA=0
         gqVTop=0
         gqATop=0
+        gdmV=0
+        gdmA=0
+        gdmVTop=0
+        gdmATop=0
         gPw=0
         gPb=0
     elif proc == 806:
@@ -68,6 +72,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gqATop=0
         gdmV=0
         gdmA=0
+        gdmVTop=0
+        gdmATop=0
         gSw=0
         gSb=0
         gSinTheta=0
@@ -78,6 +84,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqV=0
         gdmV=0
+        gdmVTop=0
         gqVTop=0
         gSw=0
         gSb=0
@@ -91,6 +98,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmP=0
         gqA=0
         gdmA=0
+        gdmATop=0
         gqATop=0
         gSw=0
         gSb=0
@@ -118,6 +126,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
                     tmpline = tmpline.replace('X_gAii_X',str(gqAii))
                     tmpline = tmpline.replace('X_gDMV_X',str(gdmV))
                     tmpline = tmpline.replace('X_gDMA_X',str(gdmA))
+                    tmpline = tmpline.replace('X_gDMVTop_X',str(gdmVTop))
+                    tmpline = tmpline.replace('X_gDMATop_X',str(gdmATop))
                     tmpline = tmpline.replace('X_gSw_X' ,str(gSw))
                     tmpline = tmpline.replace('X_gPw_X' ,str(gPw))
                     tmpline = tmpline.replace('X_gSb_X' ,str(gSb))
@@ -131,7 +141,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
                     fout.write(tmpline)
          os.system('mv %s/%s_tmp %s/%s'%(directory,f,directory,f))
  
-def fileExists(filename):
+def fileExists(user,filename):
    sc=None
    print '%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)
    exists = commands.getoutput('%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)  )
@@ -145,8 +155,8 @@ def fileExists(filename):
 aparser = argparse.ArgumentParser(description='Process benchmarks.')
 aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Axial_MonoTop_NLO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph'   ,help='carddir')
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
-aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,100,500,1000],help='mass range')
-aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,125,200,500,1000,2000],help='mediator range')
+aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1],help='mass range')
+aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[1100],help='mediator range')
 aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
 aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.25],help='gq')
 aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1],help='gdm')
@@ -177,7 +187,7 @@ procnamebase = commands.getoutput('cat %s | grep output | awk \'{print $2}\' ' %
 ##Start with the basics download Madgraph and add the options we care  :
 if not args1.resubmit and args1.install:
     os.system('rm -rf /tmp/%s/CMSSW_7_1_20' % user)
-    os.system('rm -rf /tmp/%s/MG5_aMC_v%s'  % user)
+    os.system('rm -rf /tmp/%s/MG5_aMC_v%s'  % (user,MGrelease))
     os.system('cp  patches/install.sh .')
     os.system('./install.sh')
     os.system(('mv MG5_aMC_v'+MGrelease+' %s_MG5_aMC_v'+MGrelease) % procnamebase)
