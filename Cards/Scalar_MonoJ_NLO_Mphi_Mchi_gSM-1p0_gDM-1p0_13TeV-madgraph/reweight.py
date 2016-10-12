@@ -55,10 +55,8 @@ def printsetSP(gDMS,gDMP,gS,gP):
     #Width
     print 'set DECAY 55 AUTO'
 
-
 #print 'change mode NLO'
-print 'change helicity False'
-
+print 'change rwgt_dir rwgt'
 
 weight_counter = 0
 

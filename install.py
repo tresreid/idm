@@ -46,6 +46,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gSb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gPb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gSinTheta=gq
+    if dm==1:
+        dm=9.999999e-1
     if proc == 805:
         gqP=0
         gdmP=0
@@ -97,7 +99,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
                 for line in fin:
                     tmpline =    line.replace('X_MMED_X' ,str(med))
                     tmpline = tmpline.replace('X_MMED2_X',str(max(med,400.)))
-                    tmpline = tmpline.replace('X_MDM_X' ,str(dm))
+                    tmpline = tmpline.replace('X_MDM_X' ,str(float(dm)))
                     tmpline = tmpline.replace('X_gS_X'  ,str(gqS))
                     tmpline = tmpline.replace('X_gP_X'  ,str(gqP))
                     tmpline = tmpline.replace('X_gDMS_X',str(gdmS))
@@ -138,8 +140,8 @@ aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,de
 aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1],help='mass range')
 aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[1100],help='mediator range')
 aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
-aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.25],help='gq')
-aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1],help='gdm')
+aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.5],help='gq')
+aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1.0],help='gdm')
 aparser.add_argument('-resubmit','--resubmit'  ,type=bool      ,dest='resubmit',default=False,help='resubmit')
 aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,default=True ,help='install MG')
 aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid_NLO.sh',help='runcms')
@@ -154,7 +156,7 @@ os.system('rm %s/%s/*~' % (basedir,args1.carddir))
 ##Get the base files
 parameterdir   = [ f for f in listdir(basedir+'/'+args1.carddir) if not isfile(join(basedir+'/'+args1.carddir,f)) ]
 parameterfiles = [ f for f in listdir(basedir+'/'+args1.carddir) if     isfile(join(basedir+'/'+args1.carddir,f)) ]
-print parameterfiles,' -',basedir+'/'+args1.carddir,parameterdir
+print parameterfiles,' -',basedir+'/'+args1.carddir,parameterdir,parameterfiles
 
 mgcf = [f for f in parameterfiles if f.find('madconfig') > -1]
 proc = [f for f in parameterfiles if f.find('proc')      > -1]
@@ -252,9 +254,9 @@ for med    in args1.medrange:
                         pReweight=True
                 if args1.runcms.find("NLO") > -1:
                     job_file.write('echo "shower=OFF" > makegrid.dat  \n')
+                    if pReweight:
+                        job_file.write(' echo "reweight=OFF" >> makegrid.dat  \n')
                 job_file.write('echo "done"              >>  makegrid.dat  \n')
-                if pReweight:
-                    job_file.write(' echo "reweight=OFF" >> makegrid.dat  \n')
                 if len(cust) > 0:
                     job_file.write('cat %s >> makegrid.dat \n' % (cust[0]))
                 if args1.runcms.find("NLO") == -1:
@@ -267,8 +269,8 @@ for med    in args1.medrange:
                     job_file.write('cat makegrid.dat | ./bin/generate_events pilotrun \n')
                 job_file.write('cd ..      \n')
                 if args1.runcms.find("NLO") > -1:
-                    job_file.write('echo "mg5_path = ../mgbasedir"  >> %s/Cards/me5_configuration.txt \n' % procname)
-                    job_file.write('echo "cluster_temp_path = None" >> %s/Cards/me5_configuration.txt \n' % procname)  
+                    job_file.write('echo "mg5_path = ../mgbasedir"  >> %s/Cards/amcatnlo_configuration.txt \n' % procname)
+                    job_file.write('echo "cluster_temp_path = None" >> %s/Cards/amcatnlo_configuration.txt \n' % procname)  
                     job_file.write('mv %s process  \n' % (procname))
                     job_file.write('cd process  \n')
                 else:
@@ -291,7 +293,7 @@ for med    in args1.medrange:
                     if pReweight > 0: 
                         job_file.write('mkdir -p madevent/Events/pilotrun \n')
                         job_file.write('cp unweighted_events.lhe.gz madevent/Events/pilotrun \n')
-                        job_file.write('echo "f2py_compiler=" \`which gfortran\` >> ./madevent/Card/me5_configuration.txt \n')
+                        job_file.write('echo "f2py_compiler=" `which gfortran` >> ./madevent/Card/me5_configuration.txt \n')
                         job_file.write('export LIBRARY_PATH=$LD_LIBRARY_PATH \n')
                         job_file.write('cd madevent;./bin/madevent reweight pilotrun;cd .. \n')
                                    
@@ -300,8 +302,22 @@ for med    in args1.medrange:
                 job_file.write('cp    %s/%s               runcmsgrid.sh      \n'  % (basedir,args1.runcms))
                 job_file.write('./cleangridmore.sh               \n')
                 job_file.write('mkdir  mgbasedir     \n')
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/MadSpin  mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/SysCalc  mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/input    mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/HELAS    mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/HEPTools mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/README   mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/Template mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/VERSION  mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/aloha    mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/bin      mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/madconfig  mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/madgraph   mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/mg5decay   mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/models     mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/test       mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/vendor     mgbasedir \n') % (basedir,procnamebase))
                 output  ='%s_tarball.tar.xz'                    % (procname)
                 job_file.write('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf '+output+' mgbasedir process runcmsgrid.sh \n')
                 job_file.write(('cp -r %s  %s/%s_MG5_aMC_v'+MGrelease+'/         \n') % (output,basedir,procnamebase))

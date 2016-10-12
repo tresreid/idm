@@ -87,8 +87,8 @@
   -1	= dynamical_scale_choice ! Choose one (or more) of the predefined
            ! dynamical choices. Can be a list; scale choices beyond the
            ! first are included via reweighting
-  0.5	= mur_over_ref ! ratio of current muR over reference muR
-  0.5	= muf_over_ref ! ratio of current muF over reference muF
+  1.0	= mur_over_ref ! ratio of current muR over reference muR
+  1.0	= muf_over_ref ! ratio of current muF over reference muF
 #*********************************************************************** 
 # Reweight variables for scale dependence and PDF uncertainty          *
 #***********************************************************************
@@ -116,7 +116,7 @@
 #      MG5_aMC available, but available in Pythia8.                    *
 #  -1: NNLL+NLO jet-veto computation. See arxiv:1412.8408 [hep-ph].    *
 #***********************************************************************
-  3	= ickkw 
+  0	= ickkw 
 #***********************************************************************
 #
 #***********************************************************************

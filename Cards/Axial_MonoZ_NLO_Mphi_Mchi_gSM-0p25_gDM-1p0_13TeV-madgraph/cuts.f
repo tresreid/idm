@@ -73,7 +73,7 @@ c are filled from the PDG codes (iPDG array) in this function.
       do i=0,nexternal
          do j=i+1,nexternal
             if ((abs(ipdg(i)).eq.18).and.(ipdg(i).eq.-ipdg(j))) then
-              if (ptZ(p(0,i),p(0,j)).lt.100) then
+              if (ptZ(p(0,i),p(0,j)).lt.50) then
                   passcuts_user=.false.
                   return
               endif
