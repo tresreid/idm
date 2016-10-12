@@ -316,7 +316,7 @@ for med    in args1.medrange:
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/madgraph   mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/mg5decay   mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/models     mgbasedir \n') % (basedir,procnamebase))
-                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/test       mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/tests      mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/vendor     mgbasedir \n') % (basedir,procnamebase))
                 output  ='%s_tarball.tar.xz'                    % (procname)
                 job_file.write('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf '+output+' mgbasedir process runcmsgrid.sh \n')
