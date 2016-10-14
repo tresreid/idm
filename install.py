@@ -30,6 +30,15 @@ def completed(name,medrange,dmrange,basedir,carddir):
     return completed
 
 def replace(name,med,dm,gdm,gq,proc,rand,directory):
+    #Avoid restrict cards
+    if gq == 1:
+        gq=9.999999e-1
+    if gdm == 1:
+        gdm=9.999999e-1
+    if gq == 0:
+        gq=1e-99
+    if gdm == 0:
+        gdm=1e-99
     gqS=gq
     gqP=gq
     gdmS=gdm
@@ -137,16 +146,16 @@ def fileExists(user,filename):
    return int(exists) == 1
 
 aparser = argparse.ArgumentParser(description='Process benchmarks.')
-aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Axial_MonoTop_NLO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph'   ,help='carddir')
+aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Scalar_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph'   ,help='carddir')
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
 aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1],help='mass range')
-aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[500,1000,1500,2000,2500],help='mediator range')
-aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800,801],help='proc')
-aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.25],help='gq')
+aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[125],help='mediator range')
+aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[805],help='proc')
+aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[1.0],help='gq')
 aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1.0],help='gdm')
 aparser.add_argument('-resubmit','--resubmit'  ,type=bool      ,dest='resubmit',default=False,help='resubmit')
 aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,default=True ,help='install MG')
-aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid_NLO.sh',help='runcms')
+aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid.sh',help='runcms')
 args1 = aparser.parse_args()
 
 print args1.carddir,args1.queue,args1.dmrange,args1.medrange,args1.install
@@ -295,7 +304,7 @@ for med    in args1.medrange:
                     if pReweight > 0: 
                         job_file.write('mkdir -p madevent/Events/pilotrun \n')
                         job_file.write('cp unweighted_events.lhe.gz madevent/Events/pilotrun \n')
-                        job_file.write('echo "f2py_compiler=" `which gfortran` >> ./madevent/Card/me5_configuration.txt \n')
+                        job_file.write('echo "f2py_compiler=" `which gfortran` >> ./madevent/Cards/me5_configuration.txt \n')
                         job_file.write('export LIBRARY_PATH=$LD_LIBRARY_PATH \n')
                         job_file.write('cd madevent;./bin/madevent reweight pilotrun;cd .. \n')
                                    

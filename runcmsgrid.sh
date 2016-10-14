@@ -26,6 +26,7 @@ fi
 export LHAPDF_DATA_PATH=`$LHAPDFCONFIG --datadir`
 
 echo "lhapdf = $LHAPDFCONFIG" >> ./madevent/Cards/me5_configuration.txt
+# echo "cluster_local_path = `${LHAPDFCONFIG} --datadir`" >> ./madevent/Cards/me5_configuration.txt
 
 if [ "$ncpu" -gt "1" ]; then
   echo "run_mode = 2" >> ./madevent/Cards/me5_configuration.txt
@@ -63,26 +64,20 @@ scalefact:
 1 2 0.5
 # choice of correlation scheme between muF and muR
 # set here to reproduce aMC@NLO order
-scalecorrelation:
-0 3 6 1 4 7 2 5 8
-# PDF sets and number of members (0 or none for all members)
-PDF:
-NNPDF30_lo_as_0130.LHgrid
-NNPDF30_lo_as_0130_nf_4.LHgrid
-NNPDF30_lo_as_0118.LHgrid 1
-NNPDF23_lo_as_0130_qed.LHgrid
-NNPDF23_lo_as_0119_qed.LHgrid 1
-cteq6l1.LHgrid
-HERAPDF15LO_EIG.LHgrid
-NNPDF30_nlo_as_0118.LHgrid 1
-NNPDF23_nlo_as_0119.LHgrid 1
-CT10nlo.LHgrid
 " > syscalc_card.dat
 
-./mgbasedir/SysCalc/sys_calc events_presys.lhe syscalc_card.dat cmsgrid_final.lhe
-mv events_presys.lhe cmsgrid_final.lhe
+LD_LIBRARY_PATH=`${LHAPDFCONFIG} --libdir`:${LD_LIBRARY_PATH} ./mgbasedir/SysCalc/sys_calc events_presys.lhe syscalc_card.dat cmsgrid_final.lhe
 
-
+#reweight if necessary
+if [ -e process/madevent/Cards/reweight_card.dat ]; then
+    echo "reweighting events"
+    mv cmsgrid_final.lhe process/madevent/Events/GridRun_${rnum}/unweighted_events.lhe
+    cd process/madevent
+    ./bin/madevent reweight -f GridRun_${rnum}
+    cd ../..
+    mv process/madevent/Events/GridRun_${rnum}/unweighted_events.lhe.gz cmsgrid_final.lhe.gz
+    gzip -d  cmsgrid_final.lhe.gz
+fi
 
 ls -l
 echo
