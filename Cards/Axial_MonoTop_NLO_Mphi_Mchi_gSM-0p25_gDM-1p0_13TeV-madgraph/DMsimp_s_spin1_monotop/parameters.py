@@ -288,7 +288,7 @@ MXd = Parameter(name = 'MXd',
                 value =  X_MDM_X,
                 texname = '\\text{MXd}',
                 lhablock = 'MASS',
-                lhacode = [ 900018 ])
+                lhacode = [ 18 ])
 
 MY1 = Parameter(name = 'MY1',
                 nature = 'external',
@@ -296,7 +296,7 @@ MY1 = Parameter(name = 'MY1',
                 value =  X_MMED_X,
                 texname = '\\text{MY1}',
                 lhablock = 'MASS',
-                lhacode = [ 900055 ])
+                lhacode = [ 55 ])
 
 WZ = Parameter(name = 'WZ',
                nature = 'external',

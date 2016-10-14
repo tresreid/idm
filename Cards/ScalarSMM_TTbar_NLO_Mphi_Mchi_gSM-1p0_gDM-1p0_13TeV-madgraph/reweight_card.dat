@@ -1,0 +1,318 @@
+change rwgt_dir rwgt
+#0 start of scalar
+launch
+set dminputs 1  0.001
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.001
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.005
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.025
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.1
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.2
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.4
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.6
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  0.8
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.01
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.05
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.1
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.15
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.2
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.3
+set dminputs 3  1
+set DECAY 55 AUTO
+launch
+set dminputs 1  1.0
+set dminputs 2  0.4
+set dminputs 3  1
+set DECAY 55 AUTO
+#63 start of pseudo

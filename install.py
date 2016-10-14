@@ -46,6 +46,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gSb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gPb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gSinTheta=gq
+    gH=1
     if dm==1:
         dm=9.999999e-1
     if proc == 805:
@@ -116,6 +117,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
                     tmpline = tmpline.replace('X_gPb_X' ,str(gPb))
                     tmpline = tmpline.replace('X_gDMA_X',str(gdmA))
                     tmpline = tmpline.replace('X_sintheta_X',str(gSinTheta))
+                    tmpline = tmpline.replace('X_gH_X',str(gH))
                     tmpline = tmpline.replace('MED'     ,str(med))
                     tmpline = tmpline.replace('XMASS'   ,str(dm))
                     tmpline = tmpline.replace('PROC'    ,str(proc))
@@ -138,9 +140,9 @@ aparser = argparse.ArgumentParser(description='Process benchmarks.')
 aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Axial_MonoTop_NLO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph'   ,help='carddir')
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
 aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1],help='mass range')
-aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[1100],help='mediator range')
-aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
-aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.5],help='gq')
+aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[500,1000,1500,2000,2500],help='mediator range')
+aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800,801],help='proc')
+aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[0.25],help='gq')
 aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1.0],help='gdm')
 aparser.add_argument('-resubmit','--resubmit'  ,type=bool      ,dest='resubmit',default=False,help='resubmit')
 aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,default=True ,help='install MG')
@@ -255,7 +257,7 @@ for med    in args1.medrange:
                 if args1.runcms.find("NLO") > -1:
                     job_file.write('echo "shower=OFF" > makegrid.dat  \n')
                     if pReweight:
-                        job_file.write(' echo "reweight=OFF" >> makegrid.dat  \n')
+                        job_file.write('echo "reweight=OFF" >> makegrid.dat  \n')
                 job_file.write('echo "done"              >>  makegrid.dat  \n')
                 if len(cust) > 0:
                     job_file.write('cat %s >> makegrid.dat \n' % (cust[0]))

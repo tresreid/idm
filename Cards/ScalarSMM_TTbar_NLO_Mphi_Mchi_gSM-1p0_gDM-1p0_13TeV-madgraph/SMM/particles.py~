@@ -1,6 +1,6 @@
-# This file was automatically created by FeynRules 2.4.46
-# Mathematica version: 10.3.0 for Mac OS X x86 (64-bit) (October 9, 2015)
-# Date: Fri 23 Sep 2016 19:38:41
+# This file was automatically created by FeynRules 2.3.13
+# Mathematica version: 9.0 for Mac OS X x86 (64-bit) (November 20, 2012)
+# Date: Mon 10 Oct 2016 08:07:13
 
 
 from __future__ import division
@@ -339,19 +339,33 @@ b = Particle(pdg_code = 5,
 
 b__tilde__ = b.anti()
 
-H = Particle(pdg_code = 25,
-             name = 'H',
-             antiname = 'H',
-             spin = 1,
-             color = 1,
-             mass = Param.MH,
-             width = Param.WH,
-             texname = 'H',
-             antitexname = 'H',
-             charge = 0,
-             GhostNumber = 0,
-             LeptonNumber = 0,
-             Y = 0)
+h1 = Particle(pdg_code = 25,
+              name = 'h1',
+              antiname = 'h1',
+              spin = 1,
+              color = 1,
+              mass = Param.mh1,
+              width = Param.Wh1,
+              texname = 'h1',
+              antitexname = 'h1',
+              charge = 0,
+              GhostNumber = 0,
+              LeptonNumber = 0,
+              Y = 0)
+
+h2 = Particle(pdg_code = 55,
+              name = 'h2',
+              antiname = 'h2',
+              spin = 1,
+              color = 1,
+              mass = Param.mh2,
+              width = Param.Wh2,
+              texname = 'h2',
+              antitexname = 'h2',
+              charge = 0,
+              GhostNumber = 0,
+              LeptonNumber = 0,
+              Y = 0)
 
 G0 = Particle(pdg_code = 250,
               name = 'G0',
@@ -385,37 +399,7 @@ G__plus__ = Particle(pdg_code = 251,
 
 G__minus__ = G__plus__.anti()
 
-Xr = Particle(pdg_code = 5000511,
-              name = 'Xr',
-              antiname = 'Xr',
-              spin = 1,
-              color = 1,
-              mass = Param.MXr,
-              width = Param.ZERO,
-              texname = 'Xr',
-              antitexname = 'Xr',
-              charge = 0,
-              GhostNumber = 0,
-              LeptonNumber = 0,
-              Y = 0)
-
-Xc = Particle(pdg_code = 5000512,
-              name = 'Xc',
-              antiname = 'Xc~',
-              spin = 1,
-              color = 1,
-              mass = Param.MXc,
-              width = Param.ZERO,
-              texname = 'Xc',
-              antitexname = 'Xc~',
-              charge = 0,
-              GhostNumber = 0,
-              LeptonNumber = 0,
-              Y = 0)
-
-Xc__tilde__ = Xc.anti()
-
-Xd = Particle(pdg_code = 18,
+Xd = Particle(pdg_code = 52,
               name = 'Xd',
               antiname = 'Xd~',
               spin = 2,
@@ -430,18 +414,4 @@ Xd = Particle(pdg_code = 18,
               Y = 0)
 
 Xd__tilde__ = Xd.anti()
-
-Y1 = Particle(pdg_code = 55,
-              name = 'Y1',
-              antiname = 'Y1',
-              spin = 3,
-              color = 1,
-              mass = Param.MY1,
-              width = Param.WY1,
-              texname = 'Y1',
-              antitexname = 'Y1',
-              charge = 0,
-              GhostNumber = 0,
-              LeptonNumber = 0,
-              Y = 0)
 
