@@ -415,7 +415,7 @@ Xc = Particle(pdg_code = 5000512,
 
 Xc__tilde__ = Xc.anti()
 
-Xd = Particle(pdg_code = 18,
+Xd = Particle(pdg_code = 118,
               name = 'Xd',
               antiname = 'Xd~',
               spin = 2,

@@ -78,4 +78,4 @@ for yDM in [0.001,0.005,0.025,0.1,0.2,0.4,0.6,0.8,1.0]:
             printsetSPSMM(yDM,gS,gH)
             weight_counter += 1
 
-print '#' + str(weight_counter) + ' start of pseudo'
+

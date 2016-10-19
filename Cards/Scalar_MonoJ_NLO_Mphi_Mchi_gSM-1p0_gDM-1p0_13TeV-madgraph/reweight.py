@@ -56,31 +56,31 @@ def printsetSP(gDMS,gDMP,gS,gP):
     print 'set DECAY 55 AUTO'
 
 #print 'change mode NLO'
-print 'change rwgt_dir rwgt'
+#print 'change rwgt_dir rwgt'
 
 weight_counter = 0
 
 print '#' + str(weight_counter) + ' start of scalar'
 
 #pure vector
-for gDM in [0.01, 0.05,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.7,0.9,1.1,1.3,1.5,1.7,2.0]:
-    for gS in [0.01, 0.05,0.1,0.15,0.2,0.25,0.75,1]:
+for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
+    for gS in [0.1,0.5,1,1.5,2.25,3.5]:
         printsetSP(gDM,0,gS,0)
         weight_counter += 1
 
 print '#' + str(weight_counter) + ' start of pseudo'
 
 #pure pseudo
-for gDM in [0.01, 0.05,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.7,0.9,1.0,1.1,1.3,1.5,1.7,2.0]:
-    for gP in [0.01, 0.05,0.1,0.15,0.2,0.25,0.75,1]:
+for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
+    for gP in [0.1,0.5,1,1.5,2.25,3.5]:
         printsetSP(0,gDM,0,gP)
         weight_counter += 1
 
 print '#' + str(weight_counter) + ' start of scalar+pseudo'
 
 #P+S
-for gDM in [0.01, 0.05,0.1,0.15,0.2,0.25,0.3,0.4,0.5,0.7,0.9,1.0,1.1,1.3,1.5,1.7,2.0]:
-    for gSgP in [0.01, 0.05,0.1,0.15,0.2,0.25,0.75,1]:
-        printsetSP(gDM*0.5,gDM*0.5,gS*0.5,gP*0.5)
+for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
+    for gSgP in [0.1,0.5,1,1.5,2.25,3.5]:
+        printsetSP(gDM*0.5,gDM*0.5,gSgP*0.5,gSgP*0.5)
         weight_counter += 1
 

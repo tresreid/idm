@@ -62,8 +62,8 @@ echo "
 # Central scale factors
 scalefact:
 1 2 0.5
-# choice of correlation scheme between muF and muR
-# set here to reproduce aMC@NLO order
+scalecorrelation:
+0 3 6 1 4 7 2 5 8
 " > syscalc_card.dat
 
 LD_LIBRARY_PATH=`${LHAPDFCONFIG} --libdir`:${LD_LIBRARY_PATH} ./mgbasedir/SysCalc/sys_calc events_presys.lhe syscalc_card.dat cmsgrid_final.lhe

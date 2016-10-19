@@ -35,10 +35,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gq=9.999999e-1
     if gdm == 1:
         gdm=9.999999e-1
-    if gq == 0:
-        gq=1e-99
-    if gdm == 0:
-        gdm=1e-99
+    if dm==1:
+        dm=9.999999e-1
     gqS=gq
     gqP=gq
     gdmS=gdm
@@ -56,11 +54,9 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gPb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gSinTheta=gq
     gH=1
-    if dm==1:
-        dm=9.999999e-1
     if proc == 805:
-        gqP=0
-        gdmP=0
+        gqP=0#1e-99
+        gdmP=0#1e-99
         gqV=0
         gqA=0
         gdmV=0
@@ -68,8 +64,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gPw=0
         gPb=0
     elif proc == 806:
-        gqS=0
-        gdmS=0
+        gqS=0#1e-99
+        gdmS=0#1e-99
         gqV=0
         gqA=0
         gdmV=0
@@ -82,8 +78,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmS=0
         gqP=0
         gdmP=0
-        gqV=0
-        gdmV=0
+        gqV=1e-99
+        gdmV=1e-99
         gSw=0
         gSb=0
         gPw=0
@@ -94,8 +90,8 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gdmS=0
         gqP=0
         gdmP=0
-        gqA=0
-        gdmA=0
+        gqA=1e-99
+        gdmA=1e-99
         gSw=0
         gSb=0
         gPw=0
@@ -145,17 +141,39 @@ def fileExists(user,filename):
    print exists
    return int(exists) == 1
 
+def loadRestrict(iFile):
+    print iFile
+    inputfile =  open(iFile)
+    pairs=[]
+    for line in inputfile:
+        if line.find("#") > -1:
+            continue
+        tmpline=line.replace("\n","").replace(" ","").replace("\t","")
+        lX = tmpline.split(":")[0]
+        lY = tmpline.split(":")[1].split(",")
+        for pY in lY:
+            pairs.append([int(pY),int(lX)])
+    return pairs
+
+def checkRestrict(iRestrict,iMMED,iMDM):
+    for pair in iRestrict:
+        if iMMED == pair[0] and iMDM == pair[1]:
+            return True
+    return False
+
 aparser = argparse.ArgumentParser(description='Process benchmarks.')
-aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Scalar_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph'   ,help='carddir')
+aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',default='Cards/Axial_MonoTop_NLO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph'   ,help='carddir')
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
-aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1],help='mass range')
-aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[125],help='mediator range')
-aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[805],help='proc')
-aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=int,      default=[1.0],help='gq')
-aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=int,     default=[1.0],help='gdm')
+#aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,350,450,500,600,700,1000],help='mass range')
+#aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,10000],help='mediator range')
+aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,350,450,500,600,700,1000],help='mass range')
+aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,125,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,10000],help='mediator range')
+aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
+aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=float,      default=[0.25],help='gq')
+aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=float,     default=[1.0],help='gdm')
 aparser.add_argument('-resubmit','--resubmit'  ,type=bool      ,dest='resubmit',default=False,help='resubmit')
 aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,default=True ,help='install MG')
-aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid.sh',help='runcms')
+aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid_NLO.sh',help='runcms')
 args1 = aparser.parse_args()
 
 print args1.carddir,args1.queue,args1.dmrange,args1.medrange,args1.install
@@ -174,6 +192,7 @@ proc = [f for f in parameterfiles if f.find('proc')      > -1]
 cust = [f for f in parameterfiles if f.find('custom')    > -1]
 spin = [f for f in parameterfiles if f.find('madspin')   > -1]
 rwgt = [f for f in parameterfiles if f.find('reweight')  > -1]
+rtct = [f for f in parameterfiles if f.find('mass')      > -1]
 
 procnamebase = commands.getoutput('cat %s | grep output | awk \'{print $2}\' ' % (basedir+'/'+args1.carddir+'/'+proc[0]))
 
@@ -203,21 +222,26 @@ for f in parameterdir:
     os.system('cp param_card.dat restrict_test.dat')
     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
 
+restrict = loadRestrict(basedir+"/"+args1.carddir+"/"+rtct[0])
+
 #Loop
 for med    in args1.medrange:
     for dm in args1.dmrange:
+        if not checkRestrict(restrict,med,dm):
+            continue
         tmpMed = med
+        tmpDM  = dm 
         if med == 2*dm:
-            tmpMed = 2*dm + 5
+            tmpDM = dm-10
         for pProc in args1.procrange:
             rand=random.randrange(1000,9999,1)
-            procname=procnamebase.replace("PROC",str(pProc)).replace("MED",str(tmpMed)).replace("XMASS",str(dm))
+            procname=procnamebase.replace("PROC",str(pProc)).replace("MED",str(tmpMed)).replace("XMASS",str(tmpDM))
             if not args1.resubmit:
                 for f in parameterdir:
-                    os.system('cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,dm,pProc))
-                    os.system('echo cp -r %s/%s/%s models/%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,dm))
-                    replace(procnamebase,tmpMed,dm,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,dm,pProc))
-                    os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,dm,pProc))
+                    os.system('cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
+                    os.system('echo cp -r %s/%s/%s models/%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM))
+                    replace(procnamebase,tmpMed,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
+                    os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                     os.system('python write_param_card.py')
                     os.system('cp param_card.dat restrict_test.dat')
                     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
@@ -228,7 +252,7 @@ for med    in args1.medrange:
                         with open(basedir+'/'+args1.carddir+'/'+f        ,"rt") as fin: 
                             for line in fin:
                                 tmpline =    line.replace('MED'  ,str(tmpMed))
-                                tmpline = tmpline.replace('XMASS',str(dm))
+                                tmpline = tmpline.replace('XMASS',str(tmpDM))
                                 tmpline = tmpline.replace('PROC' ,str(pProc))
                                 tmpline = tmpline.replace('RAND' ,str(random.randrange(1000,9999,1)))
                                 fout.write(tmpline)
@@ -331,7 +355,7 @@ for med    in args1.medrange:
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/vendor     mgbasedir \n') % (basedir,procnamebase))
                 output  ='%s_tarball.tar.xz'                    % (procname)
                 job_file.write('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf '+output+' mgbasedir process runcmsgrid.sh \n')
-                job_file.write(('cp -r %s  %s/%s_MG5_aMC_v'+MGrelease+'/         \n') % (output,basedir,procnamebase))
+                #job_file.write(('cp -r %s  %s/%s_MG5_aMC_v'+MGrelease+'/         \n') % (output,basedir,procnamebase))
                 job_file.write(('%s rm  eos/cms/store/user/%s/gridpack/%s  \n') % (eos,user,output))
                 job_file.write(('cmsStage %s   /store/user/%s/gridpack/%s  \n') % (output,user,output))
                 job_file.close()
@@ -339,7 +363,8 @@ for med    in args1.medrange:
             if os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')        % (basedir,procnamebase,procname)):
                 print "Looking",('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')      % (basedir,procnamebase,procname)
                 print "Loooking More",('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)
-                if not os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)):
+                #if not os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)):
+                if not fileExists(user,output):
                     os.system(('bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
             output     ='%s_tarball.tar.xz'                    % (procname)
 
