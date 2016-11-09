@@ -160,7 +160,7 @@ MXd = Parameter(name = 'MXd',
                 value = X_MDM_X,
                 texname = '\\text{MXd}',
                 lhablock = 'MASS',
-                lhacode = [ 18 ])
+                lhacode = [ 52 ])
 
 WZ = Parameter(name = 'WZ',
                nature = 'external',

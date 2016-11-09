@@ -4,7 +4,7 @@ define l+ = mu+ e+ ta+
 define l- = mu- e- ta-
 generate       p p  > xd xd~ t t~    [QCD]
 add process    p p  > xd xd~ t t~ j  [QCD]
-output TTbarDMJets_scalar_NLO_Mchi-MED_Mphi-XMASS_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+output TTbarDMJets2L_scalar_NLO_Mchi-MED_Mphi-XMASS_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
 
 
 

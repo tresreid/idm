@@ -14,7 +14,8 @@ def seq(start, stop, step=1):
         return([])
 
 def printsetVA(gDMV,gDMA,gV,gA):
-    print 'launch'
+    weight_id = 'gdmv_%s_gdma_%s_gv_%s_ga_%s' % (str(gDMV), str(gDMA), str(gV), str(gA))
+    print 'launch --rwgt_name=%s' % (weight_id.replace('.','p'))
     #Vector
     print 'set dminputs 2  %s' % str(gDMV)
     print 'set dminputs 4  %s' % str(gV)
@@ -35,7 +36,8 @@ def printsetVA(gDMV,gDMA,gV,gA):
     print 'set DECAY 55 AUTO'
 
 def printsetSP(gDMS,gDMP,gS,gP):
-    print 'launch'
+    weight_id = 'gdms_%s_gdmp_%s_gs_%s_gp_%s' % (str(gDMS), str(gDMP), str(gS), str(gP))
+    print 'launch --rwgt_name=%s' % (weight_id.replace('.','p'))
     #Scalar
     print 'set dminputs 3  %s' % str(gDMS)
     print 'set dminputs 5  %s' % str(gS)
@@ -57,30 +59,30 @@ def printsetSP(gDMS,gDMP,gS,gP):
 
 print 'change mode NLO'
 print 'change helicity False'
-
+print 'change rwgt_dir rwgt'
 weight_counter = 0
 
 print '#' + str(weight_counter) + ' start of scalar'
 
-#pure vector
-for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
-    for gS in [0.1,0.5,1,1.5,2.25,3.5]:
+#pure scalar
+for gDM in [0.1,0.5,1,2.0,3.5]:
+    for gS in [0.1,0.5,1,2.0,3.5]:
         printsetSP(gDM,0,gS,0)
         weight_counter += 1
 
-print '#' + str(weight_counter) + ' start of pseudo'
+#print '#' + str(weight_counter) + ' start of pseudo'
 
 #pure pseudo
-for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
-    for gP in [0.1,0.5,1,1.5,2.25,3.5]:
-        printsetSP(0,gDM,0,gP)
-        weight_counter += 1
+#for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
+#    for gP in [0.1,0.5,1,1.5,2.25,3.5]:
+#        printsetSP(0,gDM,0,gP)
+#        weight_counter += 1
 
-print '#' + str(weight_counter) + ' start of scalar+pseudo'
+#print '#' + str(weight_counter) + ' start of scalar+pseudo'
 
 #P+S
-for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
-    for gSgP in [0.1,0.5,1,1.5,2.25,3.5]:
-        printsetSP(gDM*0.5,gDM*0.5,gSgP*0.5,gSgP*0.5)
-        weight_counter += 1
+#for gDM in [0.1,0.5,1,1.5,2.25,3.5]:
+#    for gSgP in [0.1,0.5,1,1.5,2.25,3.5]:
+#        printsetSP(gDM*0.5,gDM*0.5,gSgP*0.5,gSgP*0.5)
+#        weight_counter += 1
 

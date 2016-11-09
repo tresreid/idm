@@ -56,7 +56,8 @@ def printsetSP(gDMS,gDMP,gS,gP):
     print 'set DECAY 55 AUTO'
 
 def printsetSPSMM(gDMS,gS,gH):
-    print 'launch'
+    name=" --rwgt_name=sin_"+str(gS)+"_gDM_"+str(gDMS)+"_gH_"+str(gH)
+    print 'launch'+name
     #Scalar
     print 'set dminputs 1  %s' % str(gDMS)
     print 'set dminputs 2  %s' % str(gS)
@@ -65,8 +66,9 @@ def printsetSPSMM(gDMS,gS,gH):
     print 'set DECAY 55 AUTO'
 
 #print 'change mode NLO'
+print 'change mode LO'
+print 'change helicity False'
 print 'change rwgt_dir rwgt'
-
 weight_counter = 0
 
 print '#' + str(weight_counter) + ' start of scalar'
@@ -78,4 +80,4 @@ for yDM in [0.001,0.005,0.025,0.1,0.2,0.4,0.6,0.8,1.0]:
             printsetSPSMM(yDM,gS,gH)
             weight_counter += 1
 
-print '#' + str(weight_counter) + ' start of pseudo'
+

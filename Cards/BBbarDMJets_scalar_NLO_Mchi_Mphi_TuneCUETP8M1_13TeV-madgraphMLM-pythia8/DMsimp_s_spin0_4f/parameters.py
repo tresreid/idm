@@ -314,6 +314,14 @@ MTA = Parameter(name = 'MTA',
 #               lhablock = 'MASS',
 #               lhacode = [ 4 ])
 
+WY0 = Parameter(name = 'WY0',
+                nature = 'external',
+                type = 'real',
+                value = 10.,
+                texname = '\\text{WY0}',
+                lhablock = 'DECAY',
+                lhacode = [ 55 ])
+
 MFB = Parameter(name = 'MFB',
                nature = 'internal',
                type = 'real',
@@ -622,11 +630,11 @@ WPY0DM      = Parameter(name = 'WPY0DM',
                         texname = '\\text{WY0DM}')
 
 # mediator width
-WY0         = Parameter(name = 'WY0',
-                        nature = 'internal',
-                        type = 'real',
-                        value = 'WSY0tt + WSY0bb + WSY0tata + WSY0DM + WPY0tt + WPY0bb + WPY0tata + WPY0DM',
-                        texname = '\\text{WY0}',
-                        lhablock = 'DECAY',
-                        lhacode = [ 9900032 ])
+#WY0         = Parameter(name = 'WY0',
+#                        nature = 'internal',
+#                        type = 'real',
+#                        value = 'WSY0tt + WSY0bb + WSY0tata + WSY0DM + WPY0tt + WPY0bb + WPY0tata + WPY0DM',
+#                        texname = '\\text{WY0}',
+#                        lhablock = 'DECAY',
+#                        lhacode = [ 9900032 ])
 

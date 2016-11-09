@@ -1,7 +1,7 @@
 import SMM_MED_XMASS_PROC-test
 # Define multiparticle labels
 generate       p p  > xd xd~ j j
-output ScalarSMM_MonoJJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph
+output ScalarSMM_MonoJJ_NLO_Mphi_MED_Mchi_XMASS_gSM-1p0_gDM-1p0_13TeV-madgraph
 
 
 

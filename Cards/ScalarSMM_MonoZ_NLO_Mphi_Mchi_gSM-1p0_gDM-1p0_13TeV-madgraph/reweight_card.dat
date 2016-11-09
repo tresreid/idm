@@ -1,4 +1,6 @@
-change rwgt_dir rwgt
+change mode NLO
+change helicity False
+#change rwgt_dir rwgt
 #0 start of scalar
 launch
 set dminputs 1  0.001
@@ -315,4 +317,3 @@ set dminputs 1  1.0
 set dminputs 2  0.4
 set dminputs 3  1
 set DECAY 55 AUTO
-#63 start of pseudo
