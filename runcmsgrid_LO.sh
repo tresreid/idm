@@ -67,8 +67,10 @@ scalefact:
 scalecorrelation:
 0 3 6 1 4 7 2 5 8
 " > syscalc_card.dat
-
-LD_LIBRARY_PATH=`${LHAPDFCONFIG} --libdir`:${LD_LIBRARY_PATH} ./mgbasedir/SysCalc/sys_calc events_presys.lhe syscalc_card.dat cmsgrid_final.lhe
+#sed "s@\<rwgt\>*\<\/rwgt\>@@g" events_presys.lhe > events_presys_tmp.lhe
+#sed -e 's/(<rwgt>)(.*)(<\/rwgt>)//g' events_presys.lhe > events_presys_tmp.lhe
+cat events_presys.lhe | perl -pe  's/\<wgt.*wgt\>\n//'  | perl -pe  's/\<rwgt\>\n//' | perl -pe 's/\<\/rwgt\>\s*\n//' | sed "s@&@@g"   > events_presys_tmp.lhe
+LD_LIBRARY_PATH=`${LHAPDFCONFIG} --libdir`:${LD_LIBRARY_PATH} ./mgbasedir/SysCalc/sys_calc events_presys_tmp.lhe syscalc_card.dat cmsgrid_final.lhe
 
 #reweight if necessary
 if [ -e process/madevent/Cards/reweight_card.dat ]; then

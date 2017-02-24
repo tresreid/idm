@@ -46,18 +46,18 @@ print '#' + str(weight_counter) + ' start of vector'
 
 #pure vector
 for gDM in [0.01,0.05,0.1,0.2,0.25,0.3,0.5,0.7,0.9,1.0,1.1,1.3,1.6,2.0]:
-    for gV in [0.01,0.05,0.1,0.2,0.25,0.3,0.5,0.75,1]:
-        if gV==0.25 and gDM==1:
+    for gA in [0.01,0.05,0.1,0.2,0.25,0.3,0.5,0.75,1]:
+        if gA==0.25 and gDM==1:
             continue
-        printsetVA(gDM,0,gV,0)
+        printsetVA(0,gDM,0,gA)
         weight_counter += 1
 
 print '#' + str(weight_counter) + ' start of axial'
 
 #pure axial
 for gDM in [0.25,1.0]:
-    for gA in [0.25,1.0]:
-        printsetVA(0,gDM,0,gA)
+    for gV in [0.25,1.0]:
+        printsetVA(gDM,0,gV,0)
         weight_counter += 1
 
 print '#' + str(weight_counter) + ' start of vector+axial'

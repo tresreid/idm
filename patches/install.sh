@@ -15,6 +15,7 @@ CARDSDIR=${RUNHOME}/${carddir}
 
 MGBASEDIR=mgbasedir
 
+#MG=MG5_aMC_v2_5_2.tar.gz
 MG=MG5_aMC_v2.4.3.tar.gz
 #MGSOURCE=https://cms-project-generators.web.cern.ch/cms-project-generators/$MG
 #MGSOURCE=$MGSOURCE/$MG
@@ -25,6 +26,7 @@ SYSCALC=SysCalc_V1.1.0.tar.gz
 SYSCALCSOURCE=https://cms-project-generators.web.cern.ch/cms-project-generators/$SYSCALC
 SYSCALCSOURCE=$SYSCALC
 
+#MGBASEDIRORIG=MG5_aMC_v2_5_2
 MGBASEDIRORIG=MG5_aMC_v2_4_3
 
 isscratchspace=0

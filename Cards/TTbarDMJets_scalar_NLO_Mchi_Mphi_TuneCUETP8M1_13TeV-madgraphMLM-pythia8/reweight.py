@@ -65,7 +65,9 @@ weight_counter = 0
 print '#' + str(weight_counter) + ' start of scalar'
 
 #pure scalar
-for gDM in [0.1,0.5,1,2.0,3.5]:
+#for gDM in [0.1,0.5,1,2.0,3.5]:
+#    for gS in [0.1,0.5,1,2.0,3.5]:
+for gDM in [1,2.0]:
     for gS in [0.1,0.5,1,2.0,3.5]:
         printsetSP(gDM,0,gS,0)
         weight_counter += 1

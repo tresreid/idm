@@ -160,7 +160,7 @@ MXd = Parameter(name = 'MXd',
                 value = X_MDM_X,
                 texname = '\\text{MXd}',
                 lhablock = 'MASS',
-                lhacode = [ 52 ])
+                lhacode = [ 18 ])
 
 WZ = Parameter(name = 'WZ',
                nature = 'external',
@@ -200,7 +200,7 @@ Wh2 = Parameter(name = 'Wh2',
                 value = 1,
                 texname = '\\text{Wh2}',
                 lhablock = 'DECAY',
-                lhacode = [ 54 ])
+                lhacode = [ 55 ])
 
 CKM1x1 = Parameter(name = 'CKM1x1',
                    nature = 'internal',

@@ -9,6 +9,7 @@ import argparse
 import random
 
 eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
+#MGrelease="2_5_2"
 MGrelease="2_4_3"
 
 def completed(name,medrange,dmrange,basedir,carddir):
@@ -132,17 +133,17 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
  
 def fileExists(user,filename):
    sc=None
-   print '%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)
+   #print '%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)
    exists = commands.getoutput('%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)  )
    if len(exists.splitlines()) > 1: 
       exists = exists.splitlines()[1]
    else:
       exists = exists.splitlines()[0]
-   print exists
+   #print exists
    return int(exists) == 1
 
 def loadRestrict(iFile):
-    print iFile
+    #print iFile
     inputfile =  open(iFile)
     pairs=[]
     for line in inputfile:
@@ -166,8 +167,8 @@ aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',def
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
 #aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,350,450,500,600,700,1000],help='mass range')
 #aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,10000],help='mediator range')
-aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,350,450,500,600,700,1000],help='mass range')
-aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,125,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,10000],help='mediator range')
+aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,400,350,450,500,600,700,1000,3000],help='mass range')
+aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,125,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,2500,3000,3500,4000,4500,5000,6000,10000],help='mediator range')
 aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
 aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=float,      default=[0.25],help='gq')
 aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=float,     default=[1.0],help='gdm')
@@ -176,7 +177,7 @@ aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,
 aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid_NLO.sh',help='runcms')
 args1 = aparser.parse_args()
 
-print args1.carddir,args1.queue,args1.dmrange,args1.medrange,args1.install
+#print args1.carddir,args1.queue,args1.dmrange,args1.medrange,args1.install
 
 user=pwd.getpwuid( os.getuid() ).pw_name
 basedir=os.getcwd()
@@ -185,7 +186,7 @@ os.system('rm %s/%s/*~' % (basedir,args1.carddir))
 ##Get the base files
 parameterdir   = [ f for f in listdir(basedir+'/'+args1.carddir) if not isfile(join(basedir+'/'+args1.carddir,f)) ]
 parameterfiles = [ f for f in listdir(basedir+'/'+args1.carddir) if     isfile(join(basedir+'/'+args1.carddir,f)) ]
-print parameterfiles,' -',basedir+'/'+args1.carddir,parameterdir,parameterfiles
+#print parameterfiles,' -',basedir+'/'+args1.carddir,parameterdir,parameterfiles
 
 mgcf = [f for f in parameterfiles if f.find('madconfig') > -1]
 proc = [f for f in parameterfiles if f.find('proc')      > -1]
@@ -206,9 +207,11 @@ if not args1.resubmit and args1.install:
 
 os.chdir (('%s_MG5_aMC_v'+MGrelease) % procnamebase)
 
-print "MG config :",mgcf[0],"ProcName : ",procnamebase
-os.system("cp "+basedir+"/"+args1.carddir+"/%s ." % mgcf[0])
-os.system("./bin/mg5_aMC %s" % mgcf[0])
+#print "MG config :",mgcf[0],"ProcName : ",procnamebase
+if not args1.resubmit and args1.install:
+    os.system("cp "+basedir+"/"+args1.carddir+"/%s ." % mgcf[0])
+    os.system("cp /afs/cern.ch/work/b/bmaier/public/xMadGraph243/lhe_parser.py ./madgraph/various/")
+    os.system("./bin/mg5_aMC %s" % mgcf[0])
 
 ##Now build the directories iterating over options
 random.seed(1)
@@ -260,6 +263,7 @@ for med    in args1.medrange:
                 job_file = open(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (basedir,procnamebase,procname), "wt")
                 job_file.write('#!/bin/bash\n')
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/  .     \n') % (basedir,procnamebase,procname))
+                job_file.write('export SCRAM_ARCH=slc6_amd64_gcc481 \n')
                 job_file.write('scramv1 project CMSSW CMSSW_7_1_20 \n')
                 job_file.write('cd CMSSW_7_1_20/src \n')
                 job_file.write('eval `scramv1 runtime -sh` \n')
@@ -361,12 +365,14 @@ for med    in args1.medrange:
                 job_file.close()
                 os.chmod(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')             % (basedir,procnamebase,procname),0777)
             if os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')        % (basedir,procnamebase,procname)):
-                print "Looking",('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')      % (basedir,procnamebase,procname)
-                print "Loooking More",('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)
+                #print "Looking",('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')      % (basedir,procnamebase,procname)
+                #print "Loooking More",('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)
                 #if not os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)):
+                output     ='%s_tarball.tar.xz'                    % (procname)
                 if not fileExists(user,output):
+                    os.system(('echo bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
                     os.system(('bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
-            output     ='%s_tarball.tar.xz'                    % (procname)
+
 
            
 #while not completed(args1.name,args1.medrange,args1.dmrange,basedir,args1.carddir):

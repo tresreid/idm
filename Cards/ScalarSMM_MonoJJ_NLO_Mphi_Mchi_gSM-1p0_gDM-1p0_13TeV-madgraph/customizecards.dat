@@ -2,4 +2,5 @@
 set param_card mass  55 MED
 set param_card mass  18 XMASS
 set param_card decay 55 auto
+set param_card decay 25 auto
 

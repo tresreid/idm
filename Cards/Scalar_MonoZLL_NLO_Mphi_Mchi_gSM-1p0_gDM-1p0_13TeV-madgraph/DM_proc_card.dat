@@ -1,4 +1,4 @@
-import DMsimp_s_spin0_MED_XMASS_PROC-test
+import DMsimp_s_spin0_MED_XMASS_PROC
 # Define multiparticle labels
 define l+ = mu+ e+ ta+
 define l- = mu- e- ta-

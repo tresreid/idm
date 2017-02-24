@@ -73,7 +73,7 @@ print '#' + str(weight_counter) + ' start of scalar'
 #print '#' + str(weight_counter) + ' start of pseudo'
 
 #pure pseudo
-for gDM in [0.1,0.5,1,2.0,3.5]: 
+for gDM in [1,2.0]:
     for gP in [0.1,0.5,1,2.0,3.5]: 
         printsetSP(0,gDM,0,gP)
         weight_counter += 1
