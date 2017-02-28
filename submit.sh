@@ -10,22 +10,20 @@
 #./install.py --carddir Cards/Axial_Dijet_NLO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph   --proc 801  --runcms runcmsgrid.sh 
 #./install.py --carddir Cards/Vector_Dijet_LO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph  --proc 800  --runcms runcmsgrid_LO.sh 
 #./install.py --carddir Cards/Axial_Dijet_LO_Mphi_Mchi_gSM-0p25_gDM-1p0_13TeV-madgraph   --proc 801  --runcms runcmsgrid_LO.sh 
-#./install.py --carddir Cards/Vector_Dijet_LO_Mphi_Mchi_gSM-1p5_gDM-1p0_13TeV-madgraph  --proc 800  --runcms runcmsgrid_LO.sh 
-#./install.py --carddir Cards/Axial_Dijet_LO_Mphi_Mchi_gSM-1p5_gDM-1p0_13TeV-madgraph   --proc 801  --runcms runcmsgrid_LO.sh 
-
-./install.py --carddir Cards/ScalarSMM_MonoZ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 
-./install.py --carddir Cards/ScalarSMM_MonoZLL_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph --proc 805  --gq 0.4 
-./install.py --carddir Cards/ScalarSMM_MonoW_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 
+./install.py --carddir Cards/Vector_Dijet_LO_Mphi_Mchi_gSM-1p5_gDM-1p0_13TeV-madgraph  --proc 800  --runcms runcmsgrid_LO.sh --gq 1.5
+./install.py --carddir Cards/Axial_Dijet_LO_Mphi_Mchi_gSM-1p5_gDM-1p0_13TeV-madgraph   --proc 801  --runcms runcmsgrid_LO.sh --gq 1.5
 exit
-#./install.py --carddir Cards/ScalarSMM_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 --runcms runcmsgrid_LO.sh --resubmit True
-#./install.py --carddir Cards/ScalarSMM_MonoJJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph  --proc 805  --gq 0.4 --runcms runcmsgrid_LO.sh --resubmit True
-#./install.py --carddir Cards/ScalarSMM_TTbar_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 
-#./install.py --carddir Cards/ScalarSMM_TTbar2L_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph --proc 805  --gq 0.4 
-
-#./install.py --carddir Cards/TTbarDMJets_scalar_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8     --proc 805  --gq 1
-#./install.py --carddir Cards/TTbarDMJets_pseudo_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8     --proc 806  --gq 1
-#./install.py --carddir Cards/TTbarDMJets2L_scalar_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8   --proc 805  --gq 1
-#./install.py --carddir Cards/TTbarDMJets2L_pseudo_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8   --proc 806  --gq 1
+./install.py --carddir Cards/ScalarSMM_MonoZ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 --resubmit True
+./install.py --carddir Cards/ScalarSMM_MonoZLL_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph --proc 805  --gq 0.4 --resubmit True
+./install.py --carddir Cards/ScalarSMM_MonoW_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 --resubmit True
+./install.py --carddir Cards/ScalarSMM_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 --runcms runcmsgrid_LO.sh --resubmit True
+./install.py --carddir Cards/ScalarSMM_MonoJJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph  --proc 805  --gq 0.4 --runcms runcmsgrid_LO.sh --resubmit True
+./install.py --carddir Cards/ScalarSMM_TTbar_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph   --proc 805  --gq 0.4 --resubmit True
+./install.py --carddir Cards/ScalarSMM_TTbar2L_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph --proc 805  --gq 0.4 --resubmit True
+./install.py --carddir Cards/TTbarDMJets_scalar_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8     --proc 805  --gq 1 --resubmit True
+./install.py --carddir Cards/TTbarDMJets_pseudo_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8     --proc 806  --gq 1 --resubmit True
+./install.py --carddir Cards/TTbarDMJets2L_scalar_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8   --proc 805  --gq 1 --resubmit True
+./install.py --carddir Cards/TTbarDMJets2L_pseudo_NLO_Mchi_Mphi_TuneCUETP8M1_13TeV-madgraphMLM-pythia8   --proc 806  --gq 1 --resubmit True
 exit
 #./install.py  --carddir Cards/Scalar_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph     --proc 805  --gq 1  --runcms runcmsgrid_LO.sh  --resubmit True
 #./install.py  --carddir Cards/Pseudo_MonoJ_NLO_Mphi_Mchi_gSM-1p0_gDM-1p0_13TeV-madgraph     --proc 806  --gq 1  --runcms runcmsgrid_LO.sh  --resubmit True
