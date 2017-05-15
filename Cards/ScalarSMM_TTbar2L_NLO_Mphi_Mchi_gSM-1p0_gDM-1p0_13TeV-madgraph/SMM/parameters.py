@@ -200,7 +200,7 @@ Wh2 = Parameter(name = 'Wh2',
                 value = 1,
                 texname = '\\text{Wh2}',
                 lhablock = 'DECAY',
-                lhacode = [ 55 ])
+                lhacode = [ 552 ])
 
 CKM1x1 = Parameter(name = 'CKM1x1',
                    nature = 'internal',

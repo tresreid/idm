@@ -1,5 +1,6 @@
 change mode LO
 change helicity False
+change rwgt_dir rwgt
 #0 start of vector
 launch --rwgt_name=gdmv_1p0_gdma_0_gv_0p01_ga_0
 set dminputs 2  1.0

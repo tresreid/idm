@@ -298,13 +298,13 @@ WH = Parameter(name = 'WH',
                lhablock = 'DECAY',
                lhacode = [ 25 ])
 
-#WY1 = Parameter(name = 'WY1',
-#                nature = 'external',
-#                type = 'real',
-#                value = 10.,
-#                texname = '\\text{WY1}',
-#                lhablock = 'DECAY',
-#                lhacode = [ 55 ])
+WY1 = Parameter(name = 'WY1',
+                nature = 'external',
+                type = 'real',
+                value = 10.,
+                texname = '\\text{WY1}',
+                lhablock = 'DECAY',
+                lhacode = [ 55 ])
 
 CKM1x1 = Parameter(name = 'CKM1x1',
                    nature = 'internal',
@@ -458,103 +458,103 @@ MFB = Parameter(name = 'MFB',
 
 
 # vector, 1411.0535
-WVuu  = Parameter(name = 'WVuu',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd11**2)*(MY1**2 + 2*MFU**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFU**2/MY1**2))',
-               texname = '\\text{WVuu}')
+#WVuu  = Parameter(name = 'WVuu',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd11**2)*(MY1**2 + 2*MFU**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFU**2/MY1**2))',
+#               texname = '\\text{WVuu}')
 
-WVcc  = Parameter(name = 'WVcc',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd22**2)*(MY1**2 + 2*MFC**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFC**2/MY1**2))',
-               texname = '\\text{WVcc}')
+#WVcc  = Parameter(name = 'WVcc',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd22**2)*(MY1**2 + 2*MFC**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFC**2/MY1**2))',
+#               texname = '\\text{WVcc}')
 
-WVtt  = Parameter(name = 'WVtt',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd33**2)*(MY1**2 + 2*MT**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MT**2/MY1**2),0.01))',
-               texname = '\\text{WVtt}')
+#WVtt  = Parameter(name = 'WVtt',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd33**2)*(MY1**2 + 2*MT**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MT**2/MY1**2),0.01))',
+#               texname = '\\text{WVtt}')
 
-WVdd  = Parameter(name = 'WVdd',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd11**2)*(MY1**2 + 2*MFD**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFD**2/MY1**2))',
-               texname = '\\text{WVdd}')
+#WVdd  = Parameter(name = 'WVdd',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd11**2)*(MY1**2 + 2*MFD**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFD**2/MY1**2))',
+#               texname = '\\text{WVdd}')
 
-WVss  = Parameter(name = 'WVss',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd22**2)*(MY1**2 + 2*MFS**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFS**2/MY1**2))',
-               texname = '\\text{WVss}')
+#WVss  = Parameter(name = 'WVss',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd22**2)*(MY1**2 + 2*MFS**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFS**2/MY1**2))',
+#               texname = '\\text{WVss}')
 
-WVbb  = Parameter(name = 'WVbb',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVd33**2)*(MY1**2 + 2*MFB**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFB**2/MY1**2))',
-               texname = '\\text{WVbb}')
+#WVbb  = Parameter(name = 'WVbb',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVd33**2)*(MY1**2 + 2*MFB**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFB**2/MY1**2))',
+#               texname = '\\text{WVbb}')
 
-
-WVDM  = Parameter(name = 'WVDM',
-               nature = 'internal',
-               type = 'real',
-               value = '((gVXd**2)*(MY1**2 + 2*MXd**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MXd**2/MY1**2),0.01))',
-               texname = '\\text{WVDM}')
+#
+#WVDM  = Parameter(name = 'WVDM',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gVXd**2)*(MY1**2 + 2*MXd**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MXd**2/MY1**2),0.01))',
+#               texname = '\\text{WVDM}')
 
 
 # axial, 1411.0535
-WAuu  = Parameter(name = 'WAuu',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd11**2)*(MY1**2 - 4*MFU**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFU**2/MY1**2))',
-               texname = '\\text{WAuu}')
+#WAuu  = Parameter(name = 'WAuu',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd11**2)*(MY1**2 - 4*MFU**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFU**2/MY1**2))',
+#               texname = '\\text{WAuu}')
 
-WAcc  = Parameter(name = 'WAcc',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd22**2)*(MY1**2 - 4*MFC**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFC**2/MY1**2))',
-               texname = '\\text{WAcc}')
+#WAcc  = Parameter(name = 'WAcc',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd22**2)*(MY1**2 - 4*MFC**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFC**2/MY1**2))',
+#               texname = '\\text{WAcc}')
 
-WAtt  = Parameter(name = 'WAtt',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd33**2)*(MY1**2 - 4*MT**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MT**2/MY1**2),0.01))',
-               texname = '\\text{WAtt}')
+#WAtt  = Parameter(name = 'WAtt',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd33**2)*(MY1**2 - 4*MT**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MT**2/MY1**2),0.01))',
+#               texname = '\\text{WAtt}')
 
-WAdd  = Parameter(name = 'WAdd',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd11**2)*(MY1**2 - 4*MFD**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFD**2/MY1**2))',
-               texname = '\\text{WAdd}')
+#WAdd  = Parameter(name = 'WAdd',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd11**2)*(MY1**2 - 4*MFD**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFD**2/MY1**2))',
+#               texname = '\\text{WAdd}')
 
-WAss= Parameter(name = 'WAss',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd22**2)*(MY1**2 - 4*MFS**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFS**2/MY1**2))',
-               texname = '\\text{WAss}')
+#WAss= Parameter(name = 'WAss',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd22**2)*(MY1**2 - 4*MFS**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFS**2/MY1**2))',
+#               texname = '\\text{WAss}')
 
-WAbb= Parameter(name = 'WAbb',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAd33**2)*(MY1**2 - 4*MFB**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFB**2/MY1**2))',
-               texname = '\\text{WAbb}')
+#WAbb= Parameter(name = 'WAbb',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAd33**2)*(MY1**2 - 4*MFB**2)/(12*MY1*cmath.pi))*cmath.sqrt(1-(4*MFB**2/MY1**2))',
+#               texname = '\\text{WAbb}')
 
-WADM  = Parameter(name = 'WADM',
-               nature = 'internal',
-               type = 'real',
-               value = '((gAXd**2)*(MY1**2 - 4*MXd**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MXd**2/MY1**2),0.01))',
-               texname = '\\text{WADM}')
+#WADM  = Parameter(name = 'WADM',
+#               nature = 'internal',
+#               type = 'real',
+#               value = '((gAXd**2)*(MY1**2 - 4*MXd**2)/(12*MY1*cmath.pi))*cmath.sqrt(max(1-(4*MXd**2/MY1**2),0.01))',
+#               texname = '\\text{WADM}')
 
-sumY1  = Parameter(name = 'sumY1',
-               nature = 'internal',
-               type = 'real',
-               value = 'WVDM + WADM + 3*(WVuu+WVcc+WVtt+WVdd+WVss+WVbb+WAuu+WAcc+WAtt+WAdd+WAss+WAbb)',
-               texname = '\\text{sumZpV}')
+#sumY1  = Parameter(name = 'sumY1',
+#               nature = 'internal',
+#               type = 'real',
+#               value = 'WVDM + WADM + 3*(WVuu+WVcc+WVtt+WVdd+WVss+WVbb+WAuu+WAcc+WAtt+WAdd+WAss+WAbb)',
+#               texname = '\\text{sumZpV}')
 
-WY1   = Parameter(name = 'WY1',
-                nature = 'internal',
-                type = 'real',
-                value = 'sumY1',
-                texname = '\\text{WY1}',
-                lhablock = 'DECAY',
-                lhacode = [ 55 ])
+#WY1   = Parameter(name = 'WY1',
+#                nature = 'internal',
+#                type = 'real',
+#                value = 'sumY1',
+#                texname = '\\text{WY1}',
+#                lhablock = 'DECAY',
+#                lhacode = [ 55 ])

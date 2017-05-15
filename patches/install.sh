@@ -1,5 +1,6 @@
 #!/bin/bash
 
+version=$1
 #exit on first error
 set -e
 
@@ -16,7 +17,10 @@ CARDSDIR=${RUNHOME}/${carddir}
 MGBASEDIR=mgbasedir
 
 #MG=MG5_aMC_v2_5_2.tar.gz
-MG=MG5_aMC_v2.4.3.tar.gz
+#MG=MG5_aMC_v2_5_1.tar.gz
+#MG=MG5_aMC_v2_5_3.tar.gz
+#MG=MG5_aMC_v2.4.3.tar.gz
+MG=MG5_aMC_v${version}.tar.gz
 #MGSOURCE=https://cms-project-generators.web.cern.ch/cms-project-generators/$MG
 #MGSOURCE=$MGSOURCE/$MG
 MGSOURCE=/afs/cern.ch/work/p/pharris/public/$MG
@@ -26,16 +30,33 @@ SYSCALC=SysCalc_V1.1.0.tar.gz
 SYSCALCSOURCE=https://cms-project-generators.web.cern.ch/cms-project-generators/$SYSCALC
 SYSCALCSOURCE=$SYSCALC
 
+#MGBASEDIRORIG=MG5_aMC_v2_5_3
+#MGBASEDIRORIG=MG5_aMC_v2_5_1
+#MGBASEDIRORIG=MG5_aMC_v2_4_3
+MGBASEDIRORIG=MG5_aMC_v${version}
 #MGBASEDIRORIG=MG5_aMC_v2_5_2
-MGBASEDIRORIG=MG5_aMC_v2_4_3
 
 isscratchspace=0
 user=`id -u -n`
+#if [ ! -d "/tmp/$user/CMSSW_7_1_25_patch5" ]; then
+#    cd /tmp/$user
+#    scramv1 project CMSSW CMSSW_7_1_25_patch5
+#fi 
+#cd /tmp/$user/CMSSW_7_1_25_patch5/src
+
 if [ ! -d "/tmp/$user/CMSSW_7_1_20" ]; then
     cd /tmp/$user
     scramv1 project CMSSW CMSSW_7_1_20
 fi 
 cd /tmp/$user/CMSSW_7_1_20/src
+#cd /afs/cern.ch/user/p/pharris/pharris/public/bacon/prod/CMSSW_7_1_20/src
+
+#export SCRAM_ARCH=slc6_amd64_gcc530
+#if [ ! -d "/tmp/$user/CMSSW_9_0_0_pre2" ]; then
+#    cd /tmp/$user
+#    scramv1 project CMSSW CMSSW_9_0_0_pre2
+#fi 
+#cd /tmp/$user/CMSSW_9_0_0_pre2/src
 eval `scramv1 runtime -sh`
 cd $RUNHOME
 echo $CMSSW_BASE

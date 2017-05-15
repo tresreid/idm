@@ -10,7 +10,8 @@ import random
 
 eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
 #MGrelease="2_5_2"
-MGrelease="2_4_3"
+MGrelease="2_5_3"
+#MGrelease="2_4_3"
 
 def completed(name,medrange,dmrange,basedir,carddir):
     completed = True
@@ -55,6 +56,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
     gPb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
     gSinTheta=gq
     gH=1
+    print "!!!!!!!!!!!!!!!!",gdm,med,dm,gq,gdmS,gdmP
     if proc == 805:
         gqP=0#1e-99
         gdmP=0#1e-99
@@ -98,7 +100,7 @@ def replace(name,med,dm,gdm,gq,proc,rand,directory):
         gPw=0
         gPb=0
         gSinTheta=0
-    
+    print "!!!!!!!!!!!!!!!!",gdm,med,dm,gq,gdmS,gdmP
     parameterfiles = [ f for f in listdir(directory) if isfile(join(directory,f)) ]    
     for f in parameterfiles:
          with open('%s/%s_tmp' % (directory,f),"wt") as fout: 
@@ -167,15 +169,18 @@ aparser.add_argument('-carddir','--carddir'   ,action='store',dest='carddir',def
 aparser.add_argument('-q'      ,'--queue'      ,action='store',dest='queue'  ,default='2nw'                   ,help='queue')
 #aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,350,450,500,600,700,1000],help='mass range')
 #aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,10000],help='mediator range')
-aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,10,50,75,100,150,200,300,400,350,450,500,600,700,1000,3000,4000],help='mass range')
+aparser.add_argument('-dm'      ,'--dmrange'   ,dest='dmrange' ,nargs='+',type=int,default=[1,5,10,50,75,100,150,200,300,400,350,450,500,600,700,1000,3000,4000],help='mass range')
 aparser.add_argument('-med'     ,'--medrange'  ,dest='medrange',nargs='+',type=int,default=[10,20,50,100,125,200,300,350,400,500,750,1000,1250,1500,1750,2000,2250,2500,3000,3500,4000,4500,5000,6000,7000,8000,10000],help='mediator range')
 aparser.add_argument('-proc'    ,'--proc'      ,dest='procrange',nargs='+',type=int,     default=[800],help='proc')
 aparser.add_argument('-gq'      ,'--gq'        ,dest='gq',nargs='+',type=float,      default=[0.25],help='gq')
-aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=float,     default=[1.0],help='gdm')
+aparser.add_argument('-gdm'     ,'--gdm'       ,dest='gdm',nargs='+',type=float,     default=[0.1],help='gdm')
 aparser.add_argument('-resubmit','--resubmit'  ,type=bool      ,dest='resubmit',default=False,help='resubmit')
 aparser.add_argument('-install' ,'--install'   ,type=bool      ,dest='install' ,default=True ,help='install MG')
 aparser.add_argument('-runcms'  ,'--runcms'    ,action='store' ,dest='runcms'  ,default='runcmsgrid_NLO.sh',help='runcms')
+aparser.add_argument('-release' ,'--release'    ,action='store' ,dest='release'  ,default='2_5_1',help='MG version')
+
 args1 = aparser.parse_args()
+MGrelease=args1.release
 
 #print args1.carddir,args1.queue,args1.dmrange,args1.medrange,args1.install
 
@@ -199,10 +204,12 @@ procnamebase = commands.getoutput('cat %s | grep output | awk \'{print $2}\' ' %
 
 ##Start with the basics download Madgraph and add the options we care  :
 if not args1.resubmit and args1.install:
+    #os.system('rm -rf /tmp/%s/CMSSW_7_1_25_patch5' % user)
     os.system('rm -rf /tmp/%s/CMSSW_7_1_20' % user)
+    #os.system('rm -rf /tmp/%s/CMSSW_9_0_0_pre2' % user)
     os.system('rm -rf /tmp/%s/MG5_aMC_v%s'  % (user,MGrelease))
     os.system('cp  patches/install.sh .')
-    os.system('./install.sh')
+    os.system('./install.sh %s' % args1.release)
     os.system(('mv MG5_aMC_v'+MGrelease+' %s_MG5_aMC_v'+MGrelease) % procnamebase)
 
 os.chdir (('%s_MG5_aMC_v'+MGrelease) % procnamebase)
@@ -210,7 +217,8 @@ os.chdir (('%s_MG5_aMC_v'+MGrelease) % procnamebase)
 #print "MG config :",mgcf[0],"ProcName : ",procnamebase
 if not args1.resubmit and args1.install:
     os.system("cp "+basedir+"/"+args1.carddir+"/%s ." % mgcf[0])
-    os.system("cp /afs/cern.ch/work/b/bmaier/public/xMadGraph243/lhe_parser.py ./madgraph/various/")
+    #os.system("cp /afs/cern.ch/work/b/bmaier/public/xMadGraph243/lhe_parser.py ./madgraph/various/")
+    os.system("cp /afs/cern.ch/user/p/pharris/pharris/public/amcatnlo_run_interface.py ./madgraph/interface/amcatnlo_run_interface.py")
     os.system("./bin/mg5_aMC %s" % mgcf[0])
 
 ##Now build the directories iterating over options
@@ -222,7 +230,7 @@ for f in parameterdir:
     os.system('cp -r %s/%s/%s models/%s' % (basedir,args1.carddir,f,f))
     os.chdir('models/%s' % (f))
     os.system('python write_param_card.py')
-    os.system('cp param_card.dat restrict_test.dat')
+    #os.system('cp param_card.dat restrict_test.dat')
     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
 
 restrict = loadRestrict(basedir+"/"+args1.carddir+"/"+rtct[0])
@@ -243,10 +251,11 @@ for med    in args1.medrange:
                 for f in parameterdir:
                     os.system('cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
                     os.system('echo cp -r %s/%s/%s models/%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM))
+                    print "!!!!!",args1.gdm[0],args1.gq[0]
                     replace(procnamebase,tmpMed,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                     os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                     os.system('python write_param_card.py')
-                    os.system('cp param_card.dat restrict_test.dat')
+                    #os.system('cp param_card.dat restrict_test.dat')
                     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
                     os.system('mkdir MG_%s' % (procname))
                 
@@ -263,9 +272,15 @@ for med    in args1.medrange:
                 job_file = open(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (basedir,procnamebase,procname), "wt")
                 job_file.write('#!/bin/bash\n')
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/  .     \n') % (basedir,procnamebase,procname))
-                job_file.write('export SCRAM_ARCH=slc6_amd64_gcc481 \n')
-                job_file.write('scramv1 project CMSSW CMSSW_7_1_20 \n')
-                job_file.write('cd CMSSW_7_1_20/src \n')
+                job_file.write('export SCRAM_ARCH=slc6_amd64_gcc530 \n')
+                #job_file.write('export SCRAM_ARCH=slc6_amd64_gcc481 \n')
+                job_file.write('cd /afs/cern.ch/user/p/pharris/pharris/public/bacon/prod/CMSSW_7_1_20/src \n')
+                #job_file.write('scramv1 project CMSSW CMSSW_7_1_25_patch5 \n')
+                #job_file.write('cd CMSSW_7_1_25_patch5/src \n')
+                #job_file.write('scramv1 project CMSSW CMSSW_7_1_20 \n')
+                #job_file.write('cd CMSSW_7_1_20/src \n')
+                #job_file.write('scramv1 project CMSSW CMSSW_9_0_0_pre2 \n')
+                #job_file.write('cd CMSSW_9_0_0_pre2/src \n')
                 job_file.write('eval `scramv1 runtime -sh` \n')
                 job_file.write('LHAPDF6TOOLFILE=$CMSSW_BASE/config/toolbox/$SCRAM_ARCH/tools/available/lhapdf6.xml \n')
                 job_file.write('if [ -e $LHAPDF6TOOLFILE ]; then \n')
@@ -281,7 +296,11 @@ for med    in args1.medrange:
                 job_file.write(('%s/%s_MG5_aMC_v'+MGrelease+'/bin/mg5_aMC  %s  \n') % (basedir,procnamebase,proc[0]) )
                 if len(cust) > 0:
                     job_file.write('cp %s %s/                   \n' % (cust[0],procname))
-                job_file.write('cd  %s                      \n' % (procname) )
+                if args1.runcms.find("NLO") > -1:
+                    job_file.write('mv %s process  \n' % (procname))
+                    job_file.write('cd process     \n' )
+                else:
+                    job_file.write('cd  %s                      \n' % (procname) )
                 pReweight=False
                 for f in parameterfiles:
                     if f.find('dat') > -1:
@@ -308,9 +327,8 @@ for med    in args1.medrange:
                     job_file.write('cat makegrid.dat | ./bin/generate_events pilotrun \n')
                 job_file.write('cd ..      \n')
                 if args1.runcms.find("NLO") > -1:
-                    job_file.write('echo "mg5_path = ../mgbasedir"  >> %s/Cards/amcatnlo_configuration.txt \n' % procname)
-                    job_file.write('echo "cluster_temp_path = None" >> %s/Cards/amcatnlo_configuration.txt \n' % procname)  
-                    job_file.write('mv %s process  \n' % (procname))
+                    job_file.write('echo "mg5_path = ../mgbasedir"  >> process/Cards/amcatnlo_configuration.txt \n')
+                    job_file.write('echo "cluster_temp_path = None" >> process/Cards/amcatnlo_configuration.txt \n')  
                     job_file.write('cd process  \n')
                 else:
                     job_file.write('mkdir process \n')
@@ -332,7 +350,8 @@ for med    in args1.medrange:
                     if pReweight > 0: 
                         job_file.write('mkdir -p madevent/Events/pilotrun \n')
                         job_file.write('cp unweighted_events.lhe.gz madevent/Events/pilotrun \n')
-                        job_file.write('echo "f2py_compiler=" `which gfortran` >> ./madevent/Cards/me5_configuration.txt \n')
+                        #if args1.runcms.find("NLO") > -1:
+                        #    job_file.write('echo "f2py_compiler=" `which gfortran` >> ./madevent/Cards/me5_configuration.txt \n')
                         job_file.write('export LIBRARY_PATH=$LD_LIBRARY_PATH \n')
                         job_file.write('cd madevent;./bin/madevent reweight pilotrun;cd .. \n')
                                    
@@ -357,6 +376,8 @@ for med    in args1.medrange:
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/models     mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/tests      mgbasedir \n') % (basedir,procnamebase))
                 job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/vendor     mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/PLUGINS    mgbasedir \n') % (basedir,procnamebase))
+                job_file.write(('cp -r %s/%s_MG5_aMC_v'+MGrelease+'/PLUGIN     mgbasedir \n') % (basedir,procnamebase))
                 output  ='%s_tarball.tar.xz'                    % (procname)
                 job_file.write('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf '+output+' mgbasedir process runcmsgrid.sh \n')
                 #job_file.write(('cp -r %s  %s/%s_MG5_aMC_v'+MGrelease+'/         \n') % (output,basedir,procnamebase))

@@ -1,7 +1,5 @@
 change mode LO
 change helicity False
-#change rwgt_dir rwgt => apparently screws up things
-#0 start of scalar
 launch --rwgt_name=sin_0.01_gDM_0.001_gH_1
 set dminputs 1  0.001
 set dminputs 2  0.01
