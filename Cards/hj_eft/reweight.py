@@ -33,10 +33,11 @@ weight_counter = 0
 print '#' + str(weight_counter) + ' start of scalar'
 
 #pure scalar
-for mtp in [500,10000]:
-    for gt in [0.5,1.0,2.0,5.0]:
-        for cgt in [0.5,1.0,2.0,5.0]:
-            for cyr in [0.5,1.0,2.0,5.0]:
-                for cyi in [0.5,1.0,2.0,5.0]:
-                    printsetg(gt,cgt,cyr,cyi,mtp)
+for mtp in [10000]:
+    for gt in [0.5,1.0,2.0]:
+        for cgt in [0.0,0.5,1.0,2.0,5.0]:
+            for cyr in [-0.3,0,0.3]:
+                for cyi in [0.]:
+                    tCyr=cgt+cyr
+                    printsetg(gt,cgt,tCyr,cyi,mtp)
                     weight_counter += 1
