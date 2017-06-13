@@ -44,19 +44,19 @@ user=`id -u -n`
 #fi 
 #cd /tmp/$user/CMSSW_7_1_25_patch5/src
 
-if [ ! -d "/tmp/$user/CMSSW_7_1_20" ]; then
-    cd /tmp/$user
-    scramv1 project CMSSW CMSSW_7_1_20
-fi 
-cd /tmp/$user/CMSSW_7_1_20/src
+#if [ ! -d "/tmp/$user/CMSSW_7_1_20" ]; then
+#    cd /tmp/$user
+#    scramv1 project CMSSW CMSSW_7_1_20
+#fi 
+#cd /tmp/$user/CMSSW_7_1_20/src
 #cd /afs/cern.ch/user/p/pharris/pharris/public/bacon/prod/CMSSW_7_1_20/src
 
-#export SCRAM_ARCH=slc6_amd64_gcc530
-#if [ ! -d "/tmp/$user/CMSSW_9_0_0_pre2" ]; then
-#    cd /tmp/$user
-#    scramv1 project CMSSW CMSSW_9_0_0_pre2
-#fi 
-#cd /tmp/$user/CMSSW_9_0_0_pre2/src
+export SCRAM_ARCH=slc6_amd64_gcc530
+if [ ! -d "/tmp/$user/CMSSW_9_0_0_pre2" ]; then
+    cd /tmp/$user
+    scramv1 project CMSSW CMSSW_9_0_0_pre2
+fi 
+cd /tmp/$user/CMSSW_9_0_0_pre2/src
 eval `scramv1 runtime -sh`
 cd $RUNHOME
 echo $CMSSW_BASE
@@ -108,6 +108,7 @@ echo "save options" >> mgconfigscript
 ./bin/mg5_aMC mgconfigscript
 cp ../patches/mg5_configuration.txt input
 rm mgconfigscript
+mv HEPTools/collier HEPTools/collier_sucks
 #get syscalc and compile
 #wget --no-check-certificate ${SYSCALCSOURCE}
 cp /afs/cern.ch/cms/generators/www/${SYSCALCSOURCE} .
