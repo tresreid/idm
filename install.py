@@ -230,7 +230,7 @@ for f in parameterdir:
     os.system('cp -r %s/%s/%s models/%s' % (basedir,args1.carddir,f,f))
     os.chdir('models/%s' % (f))
     os.system('python write_param_card.py')
-    #os.system('cp param_card.dat restrict_test.dat')
+    os.system('cp param_card.dat restrict_test.dat')
     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
 
 restrict = loadRestrict(basedir+"/"+args1.carddir+"/"+rtct[0])
@@ -255,7 +255,7 @@ for med    in args1.medrange:
                     replace(procnamebase,tmpMed,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                     os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                     os.system('python write_param_card.py')
-                    #os.system('cp param_card.dat restrict_test.dat')
+                    os.system('cp param_card.dat restrict_test.dat')
                     os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
                     os.system('mkdir MG_%s' % (procname))
                 
@@ -312,8 +312,8 @@ for med    in args1.medrange:
                         pReweight=True
                 if args1.runcms.find("NLO") > -1:
                     job_file.write('echo "shower=OFF" > makegrid.dat  \n')
-                    if pReweight:
-                        job_file.write('echo "reweight=OFF" >> makegrid.dat  \n')
+                    #if pReweight:
+                    #    job_file.write('echo "reweight=OFF" >> makegrid.dat  \n')
                 job_file.write('echo "done"              >>  makegrid.dat  \n')
                 if len(cust) > 0:
                     job_file.write('cat %s >> makegrid.dat \n' % (cust[0]))
