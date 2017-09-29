@@ -36,7 +36,7 @@
 # Normalize the weights of LHE events such that they sum or average to *
 # the total cross section                                              *
 #***********************************************************************
-  average	= event_norm ! average or sum
+  bias	= event_norm ! average or sum
 #***********************************************************************
 # Number of points per itegration channel (ignored for aMC@NLO runs)   *
 #***********************************************************************
