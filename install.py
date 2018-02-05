@@ -143,8 +143,7 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
         gdm=9.999999e-1
     #if dm==1:
     #    dm=9.999999e-1
-    theta=0.01
-    proc=700
+    #theta=0.01
 
     print "!!!!!!!!!!!!!!!!",gdm,gq,med,hdm,dm,theta
 
@@ -153,16 +152,24 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
         with open('%s/%s_tmp' % (directory,f),"wt") as fout: 
             with open(directory+'/'+f        ,"rt") as fin: 
                 for line in fin:
-                    tmpline = line.replace('X_gQ_X'   , str(gq))
-                    tmpline = tmpline.replace('X_gX_X'   , str(gdm))
-                    tmpline = tmpline.replace('X_tH_X'   , str(theta))
-                    tmpline = tmpline.replace('X_MZP_X'  , str(med))
-                    tmpline = tmpline.replace('X_MHS_X'  , str(hdm))
-                    tmpline = tmpline.replace('X_MX_X'   , str(dm))
-                    tmpline = tmpline.replace('MED'     ,str(med))
-                    tmpline = tmpline.replace('XHS'     ,str(hdm))
-                    tmpline = tmpline.replace('XMASS'   ,str(dm))
-                    tmpline = tmpline.replace('PROC'    ,str(proc))
+
+                    if proc == 700 or proc == 701: #BBbarDM/Dijet
+                        tmpline = line.replace('X_gQ_X'   , str(gq))
+                        tmpline = tmpline.replace('X_gX_X'   , str(gdm))
+                        tmpline = tmpline.replace('X_tH_X'   , str(theta))
+                        tmpline = tmpline.replace('X_MZP_X'  , str(med))
+                        tmpline = tmpline.replace('X_MHS_X'  , str(hdm))
+                        tmpline = tmpline.replace('X_MX_X'   , str(dm))
+                        tmpline = tmpline.replace('MED'     ,str(med))
+                        tmpline = tmpline.replace('XHS'     ,str(hdm))
+                        tmpline = tmpline.replace('XMASS'   ,str(dm))
+                        tmpline = tmpline.replace('PROC'    ,str(proc))
+                    elif proc == 702: #pseudoscalar dark photon model
+                        tmpline = line.replace('X_MZP_X'  , str(med))
+                        tmpline = tmpline.replace('X_MPS_X'   , str(dm))
+                        tmpline = tmpline.replace('MED'     ,str(med))
+                        tmpline = tmpline.replace('XMASS'   ,str(dm))
+                        tmpline = tmpline.replace('PROC'    ,str(proc))
                     fout.write(tmpline)
         os.system('mv %s/%s_tmp %s/%s'%(directory,f,directory,f))
 
@@ -284,54 +291,104 @@ elif 'DiJets' in procnamebase:
     medranges = args1.medrange
     dmranges = args1.hdmrange
 else:
-    print "NONE matches, faulty"
-    exit 
+    medranges = args1.medrange
+    dmranges = args1.dmrange
+
+    print "medranges = ", args1.medrange
+    print "dmranges = ", args1.dmrange
+    print "Proc = ", args1.procrange
+    #print "NONE matches, faulty"
+    #exit 
 
 #Loop
 #BBabr --> Z' is the med to chi chi
 #Dijet --> hs is the med to chi chi, but since chi is fixed, we play the game of Z' is med and hs is decay product
 for med    in medranges:
     for dm in dmranges:
-        # Overriding dm with hdm and dm stay with dmrange
-        if 'DiJets' in procnamebase:
-            print "Interpreting Dijet"
-            hdm = dm
-            dm = args1.dmrange[0]
-        if 'BBbar' in procnamebase:
-            print "Interpreting BBbar"
-            hdm = args1.hdmrange[0]
 
-        print "med : ", med
-        print "hs  : ", hdm
-        print "dm  : ", dm
-        if 'BBbar' in procnamebase:
-            if not checkRestrict(restrict,med,dm):
-                print "Unphysical Phase Space"
-                continue
+        #Special case for dark higgs
+        if args1.procrange[0] == 700 or args1.procrange[0] == 701:
+            # Overriding dm with hdm and dm stay with dmrange
+            if 'DiJets' in procnamebase:
+                print "Interpreting Dijet"
+                hdm = dm
+                dm = args1.dmrange[0]
+            if 'BBbar' in procnamebase:
+                print "Interpreting BBbar"
+                hdm = args1.hdmrange[0]
 
-        tmpMed = med
-        tmpDM  = dm 
-        tmpHdm = hdm
+            print "med : ", med
+            print "hs  : ", hdm
+            print "dm  : ", dm
+            if 'BBbar' in procnamebase:
+                if not checkRestrict(restrict,med,dm):
+                    print "Unphysical Phase Space"
+                    continue
 
-        if procnamebase.find("BBbar"):
-            if med == 2*dm:
-                tmpDM = dm-10
+            tmpMed = med
+            tmpDM  = dm 
+            tmpHdm = hdm
 
+            if procnamebase.find("BBbar"):
+                if med == 2*dm:
+                    tmpDM = dm-10
+        #pseudoscalar has two scan parameter:
+        elif args1.procrange[0] == 702:
+            tmpMed = med
+            tmpDM  = dm
+        #iDM has three scan parameter:
+        elif args1.procrange[0] == 703:
+            tmpMed = med
+            tmpDM  = dm
+            tmpHdm = hdm
+
+#########################################
         for pProc in args1.procrange:
             rand=random.randrange(1000,9999,1)
-            procname=procnamebase.replace("PROC",str(pProc)).replace("MED",str(tmpMed)).replace("XMASS",str(tmpDM)).replace("XHS",str(tmpHdm))
+            if pProc == 703 or pProc == 701 or pProc == 700:
+                procname=procnamebase.replace("PROC",str(pProc)).replace("MED",str(tmpMed)).replace("XMASS",str(tmpDM)).replace("XHS",str(tmpHdm))
+            elif pProc == 702:
+                print "procnamebase = ", procnamebase
+                procname=procnamebase.replace("PROC",str(pProc)).replace("MED",str(tmpMed)).replace("XMASS",str(tmpDM))
+
             if not args1.resubmit:
                 for f in parameterdir:
-                    os.system('cp -r %s/%s/%s models/%s_%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM,pProc))
-                    os.system('echo cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM))
-                    print "!!!!!",args1.gdm[0],args1.gq[0]
-                    #print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc)
-                    replace(procnamebase,tmpMed,tmpHdm,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
-                    os.chdir('models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
-                    os.system('python write_param_card.py')
-                    #os.system('cp param_card.dat restrict_test.dat')
-                    os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
-                    os.system('mkdir MG_%s' % (procname))
+                    if pProc == 700 or pProc == 701:
+                        os.system('cp -r %s/%s/%s models/%s_%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM))
+                        print "!!!!!",args1.gdm[0],args1.gq[0]
+                        #print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc) 
+                        replace(procnamebase,tmpMed,tmpHdm,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.chdir('models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.system('python write_param_card.py')
+                        #os.system('cp param_card.dat restrict_test.dat')                              
+                        os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
+                        os.system('mkdir MG_%s' % (procname))
+
+                    elif pProc == 703:
+                        os.system('cp -r %s/%s/%s models/%s_%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM))
+                        print "!!!!!",args1.gdm[0],args1.gq[0]
+                        #print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc) #potential bug
+                        replace(procnamebase,tmpMed,tmpHdm,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.chdir('models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
+                        os.system('python write_param_card.py')
+                        #os.system('cp param_card.dat restrict_test.dat')
+                        os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
+                        os.system('mkdir MG_%s' % (procname))
+                    elif pProc == 702:
+                        os.system('cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
+                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM))
+                        print "!!!!!",args1.gdm[0],args1.gq[0]
+                        print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc)
+                        #potential bug
+                        replace(procnamebase,tmpMed,tmpDM,pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
+                        os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
+                        os.system('python write_param_card.py')
+                        #os.system('cp param_card.dat restrict_test.dat')
+                        os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
+                        os.system('mkdir MG_%s' % (procname))
+
                 
                 for f in parameterfiles:
                     with open('MG_%s/%s' % (procname,f), "wt") as fout: 
@@ -339,7 +396,8 @@ for med    in medranges:
                             for line in fin:
                                 tmpline =    line.replace('MED'  ,str(tmpMed))
                                 tmpline = tmpline.replace('XMASS',str(tmpDM))
-                                tmpline = tmpline.replace('XHS',str(tmpHdm))
+                                if pProc == 703:
+                                    tmpline = tmpline.replace('XHS',str(tmpHdm))
                                 tmpline = tmpline.replace('PROC' ,str(pProc))
                                 tmpline = tmpline.replace('RAND' ,str(random.randrange(1000,9999,1)))
                                 fout.write(tmpline)
