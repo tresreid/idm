@@ -292,7 +292,7 @@ WW = Parameter(name = 'WW',
 WZp = Parameter(name = 'WZp',
                 nature = 'external',
                 type = 'real',
-                value = X_WZP_X,
+                value = 0.01,
                 texname = '\\text{WZp}',
                 lhablock = 'DECAY',
                 lhacode = [ 32 ])

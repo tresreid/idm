@@ -12,129 +12,7 @@ eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
 #MGrelease="2_5_2"
 MGrelease="2_5_3"
 #MGrelease="2_4_3"
-'''
-def completed(name,medrange,dmrange,basedir,carddir):
-    completed = True
-    for med in medrange:
-        for dm in dmrange:
-            if med < dm: 
-                continue
-            fileExists=os.path.isfile('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s_%s_%s/process/run.sh' % (basedir,name,name,med,dm)) 
-            if fileExists:
-                madgraph='%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s_%s_%s/mgbasedir' % (basedir,name,name,med,dm)
-                process ='%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s_%s_%s/process'   % (basedir,name,name,med,dm)
-                runcms  ='%s/runcmsgrid.sh'                           % (basedir)
-                output  ='%s_%s_%s_tarball.tar.xz'                    % (name,med,dm)
-                os.system('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf '+output+' '+madgraph+' '+process+' '+runcms)
-            else:
-                if not os.path.isfile('MG_%s_%s_%s.tgz' % (name,med,dm)):
-                    completed = False
-    return completed
-'''
 
-'''
-def replace(name,med,dm,gdm,gq,proc,rand,directory):
-    #Avoid restrict cards
-    if gq == 1:
-        gq=9.999999e-1
-    if gdm == 1:
-        gdm=9.999999e-1
-    if dm==1:
-        dm=9.999999e-1
-    gqS=gq
-    gqP=gq
-    gdmS=gdm
-    gdmP=gdm
-    gqV=gq
-    gqA=gq
-    #Diagonals for monotop (set it to 0 for now)
-    gqVii=0
-    gqAii=0
-    gdmV=gdm
-    gdmA=gdm
-    gSw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
-    gPw=gq*(80.19)*math.sqrt(3.1419265/132.5/0.233)
-    gSb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
-    gPb=gq*(80.19)*math.sqrt(3.1419265/132.5/(1-0.233))
-    gSinTheta=gq
-    gH=1
-    print "!!!!!!!!!!!!!!!!",gdm,med,dm,gq,gdmS,gdmP
-    if proc == 805:
-        gqP=0#1e-99
-        gdmP=0#1e-99
-        gqV=0
-        gqA=0
-        gdmV=0
-        gdmA=0
-        gPw=0
-        gPb=0
-    elif proc == 806:
-        gqS=0#1e-99
-        gdmS=0#1e-99
-        gqV=0
-        gqA=0
-        gdmV=0
-        gdmA=0
-        gSw=0
-        gSb=0
-        gSinTheta=0
-    elif proc == 801:
-        gqS=0
-        gdmS=0
-        gqP=0
-        gdmP=0
-        gqV=1e-99
-        gdmV=1e-99
-        gSw=0
-        gSb=0
-        gPw=0
-        gPb=0
-        gSinTheta=0
-    else:
-        gqS=0
-        gdmS=0
-        gqP=0
-        gdmP=0
-        gqA=1e-99
-        gdmA=1e-99
-        gSw=0
-        gSb=0
-        gPw=0
-        gPb=0
-        gSinTheta=0
-    print "!!!!!!!!!!!!!!!!",gdm,med,dm,gq,gdmS,gdmP
-    parameterfiles = [ f for f in listdir(directory) if isfile(join(directory,f)) ]    
-    for f in parameterfiles:
-         with open('%s/%s_tmp' % (directory,f),"wt") as fout: 
-            with open(directory+'/'+f        ,"rt") as fin: 
-                for line in fin:
-                    tmpline =    line.replace('X_MMED_X' ,str(med))
-                    tmpline = tmpline.replace('X_MMED2_X',str(max(med,400.)))
-                    tmpline = tmpline.replace('X_MDM_X' ,str(float(dm)))
-                    tmpline = tmpline.replace('X_gS_X'  ,str(gqS))
-                    tmpline = tmpline.replace('X_gP_X'  ,str(gqP))
-                    tmpline = tmpline.replace('X_gDMS_X',str(gdmS))
-                    tmpline = tmpline.replace('X_gDMP_X',str(gdmP))
-                    tmpline = tmpline.replace('X_gV_X'  ,str(gqV))
-                    tmpline = tmpline.replace('X_gA_X'  ,str(gqA))
-                    tmpline = tmpline.replace('X_gVii_X',str(gqVii))
-                    tmpline = tmpline.replace('X_gAii_X',str(gqAii))
-                    tmpline = tmpline.replace('X_gDMV_X',str(gdmV))
-                    tmpline = tmpline.replace('X_gDMA_X',str(gdmA))
-                    tmpline = tmpline.replace('X_gSw_X' ,str(gSw))
-                    tmpline = tmpline.replace('X_gPw_X' ,str(gPw))
-                    tmpline = tmpline.replace('X_gSb_X' ,str(gSb))
-                    tmpline = tmpline.replace('X_gPb_X' ,str(gPb))
-                    tmpline = tmpline.replace('X_gDMA_X',str(gdmA))
-                    tmpline = tmpline.replace('X_sintheta_X',str(gSinTheta))
-                    tmpline = tmpline.replace('X_gH_X',str(gH))
-                    tmpline = tmpline.replace('MED'     ,str(med))
-                    tmpline = tmpline.replace('XMASS'   ,str(dm))
-                    tmpline = tmpline.replace('PROC'    ,str(proc))
-                    tmpline = tmpline.replace('RAND'    ,str(rand))
-                    fout.write(tmpline)
-         os.system('mv %s/%s_tmp %s/%s'%(directory,f,directory,f))
-'''
 def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
     #Avoid restrict cards
     if gq == 1:
@@ -145,7 +23,10 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
     #    dm=9.999999e-1
     #theta=0.01
 
-    print "!!!!!!!!!!!!!!!!",gdm,gq,med,hdm,dm,theta
+    if proc == 700 or proc == 701:
+        print "!!!!!!!!!!!!!!!!",gdm,gq,med,hdm,dm,theta
+    if proc == 702:
+        print "!!!!!!!!!!!!!!!!",med,dm
 
     parameterfiles = [ f for f in listdir(directory) if isfile(join(directory,f)) ]    
     for f in parameterfiles:
@@ -170,7 +51,15 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
                         tmpline = tmpline.replace('MED'     ,str(med))
                         tmpline = tmpline.replace('XMASS'   ,str(dm))
                         tmpline = tmpline.replace('PROC'    ,str(proc))
-                    fout.write(tmpline)
+                    elif proc == 703:
+                        tmpline = line.replace('X_MZDINPUT_X'  , str(med))
+                        tmpline = tmpline.replace('X_DMCHI_X'  , str(hdm))
+                        tmpline = tmpline.replace('X_MCHI_X'   , str(dm))
+                        tmpline = tmpline.replace('MED'     ,str(med))
+                        tmpline = tmpline.replace('XHS'     ,str(hdm))
+                        tmpline = tmpline.replace('XMASS'   ,str(dm))
+                        tmpline = tmpline.replace('PROC'    ,str(proc))
+                fout.write(tmpline)
         os.system('mv %s/%s_tmp %s/%s'%(directory,f,directory,f))
 
 def fileExists(user,filename):
@@ -317,7 +206,7 @@ for med    in medranges:
                 print "Interpreting BBbar"
                 hdm = args1.hdmrange[0]
 
-            print "med : ", med
+            print "med :  ", med
             print "hs  : ", hdm
             print "dm  : ", dm
             if 'BBbar' in procnamebase:
@@ -340,7 +229,7 @@ for med    in medranges:
         elif args1.procrange[0] == 703:
             tmpMed = med
             tmpDM  = dm
-            tmpHdm = hdm
+            tmpHdm = args1.hdmrange[0]
 
 #########################################
         for pProc in args1.procrange:
@@ -382,7 +271,7 @@ for med    in medranges:
                         print "!!!!!",args1.gdm[0],args1.gq[0]
                         print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc)
                         #potential bug
-                        replace(procnamebase,tmpMed,tmpDM,pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
+                        replace(procnamebase,tmpMed,1.,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                         os.chdir('models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc))
                         os.system('python write_param_card.py')
                         #os.system('cp param_card.dat restrict_test.dat')
@@ -518,8 +407,9 @@ for med    in medranges:
                 #job_file.write(('cmsStage %s   /store/user/%s/gridpack/%s  \n') % (output,user,output))
                 #job_file.write(('rm  /afs/cern.ch/work/s/%s/analysis/bb_MET_Analysis_13TeV/phil_mg5_test/MadGraph5_aMCatNLO_Grid/gridpack/%s  \n') % (user,output))
                 #job_file.write(('scp %s   /afs/cern.ch/work/s/%s/analysis/bb_MET_Analysis_13TeV/phil_mg5_test/MadGraph5_aMCatNLO_Grid/gridpack/%s  \n') % (output,user,output))
-                job_file.write(('rm   /eos/user/s/%s/gridpacks/%s  \n') % (user,output))
-                job_file.write(('scp %s  /eos/user/s/%s/gridpacks/%s  \n') % (output,user,output))
+                
+                job_file.write(('rm   /eos/user/%s/%s/gridpacks/%s  \n') % (user[0],user,output))
+                job_file.write(('scp %s  /eos/user/%s/%s/gridpacks/%s  \n') % (output,user[0],user,output))
 
                 job_file.close()
                 os.chmod(('%s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh')             % (basedir,procnamebase,procname),0777)
