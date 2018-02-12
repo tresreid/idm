@@ -21,7 +21,7 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
         gdm=9.999999e-1
     #if dm==1:
     #    dm=9.999999e-1
-    #theta=0.01
+    theta=0.01
 
     if proc == 700 or proc == 701:
         print "!!!!!!!!!!!!!!!!",gdm,gq,med,hdm,dm,theta
@@ -30,10 +30,10 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
 
     parameterfiles = [ f for f in listdir(directory) if isfile(join(directory,f)) ]    
     for f in parameterfiles:
+        #print '%s/%s_tmp' % (directory,f)
         with open('%s/%s_tmp' % (directory,f),"wt") as fout: 
             with open(directory+'/'+f        ,"rt") as fin: 
                 for line in fin:
-
                     if proc == 700 or proc == 701: #BBbarDM/Dijet
                         tmpline = line.replace('X_gQ_X'   , str(gq))
                         tmpline = tmpline.replace('X_gX_X'   , str(gdm))
@@ -45,13 +45,13 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
                         tmpline = tmpline.replace('XHS'     ,str(hdm))
                         tmpline = tmpline.replace('XMASS'   ,str(dm))
                         tmpline = tmpline.replace('PROC'    ,str(proc))
-                    elif proc == 702: #pseudoscalar dark photon model
+                    if proc == 702: #pseudoscalar dark photon model
                         tmpline = line.replace('X_MZP_X'  , str(med))
                         tmpline = tmpline.replace('X_MPS_X'   , str(dm))
                         tmpline = tmpline.replace('MED'     ,str(med))
                         tmpline = tmpline.replace('XMASS'   ,str(dm))
                         tmpline = tmpline.replace('PROC'    ,str(proc))
-                    elif proc == 703:
+                    if proc == 703:
                         tmpline = line.replace('X_MZDINPUT_X'  , str(med))
                         tmpline = tmpline.replace('X_DMCHI_X'  , str(hdm))
                         tmpline = tmpline.replace('X_MCHI_X'   , str(dm))
@@ -59,7 +59,7 @@ def replace(name,med,hdm,dm,gdm,gq,proc,rand,directory):
                         tmpline = tmpline.replace('XHS'     ,str(hdm))
                         tmpline = tmpline.replace('XMASS'   ,str(dm))
                         tmpline = tmpline.replace('PROC'    ,str(proc))
-                fout.write(tmpline)
+                    fout.write(tmpline)
         os.system('mv %s/%s_tmp %s/%s'%(directory,f,directory,f))
 
 def fileExists(user,filename):
@@ -256,7 +256,7 @@ for med    in medranges:
 
                     elif pProc == 703:
                         os.system('cp -r %s/%s/%s models/%s_%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM,pProc))
-                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM))
+                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpHdm,tmpDM,pProc))
                         print "!!!!!",args1.gdm[0],args1.gq[0]
                         #print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc) #potential bug
                         replace(procnamebase,tmpMed,tmpHdm,tmpDM,args1.gdm[0],args1.gq[0],pProc,rand,'models/%s_%s_%s_%s_%s' % (f,tmpMed,tmpHdm,tmpDM,pProc))
@@ -266,8 +266,9 @@ for med    in medranges:
                         os.chdir(('%s/%s_MG5_aMC_v'+MGrelease) % (basedir,procnamebase))
                         os.system('mkdir MG_%s' % (procname))
                     elif pProc == 702:
-                        os.system('cp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
-                        os.system('echo cp -r %s/%s/%s models/%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM))
+                        os.system('scp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
+                        os.system('echo scp -r %s/%s/%s models/%s_%s_%s_%s' % (basedir,args1.carddir,f,f,tmpMed,tmpDM,pProc))
+                        os.system('pwd')
                         print "!!!!!",args1.gdm[0],args1.gq[0]
                         print 'models/%s_%s_%s_%s' % (f,tmpMed,tmpDM,pProc)
                         #potential bug
@@ -418,9 +419,9 @@ for med    in medranges:
                 #print "Loooking More",('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)
                 #if not os.path.isfile(('%s/%s_MG5_aMC_v'+MGrelease+'/%s_tarball.tar.xz') % (basedir,procnamebase,procname)):
                 output     ='%s_tarball.tar.xz'                    % (procname)
-                if not fileExists(user,output):
-                    os.system(('echo bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
-                    os.system(('bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
+                #if not fileExists(user,output):
+                #    os.system(('echo bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
+                #    os.system(('bsub -q  %s -R "rusage[mem=12000]" %s/%s_MG5_aMC_v'+MGrelease+'/MG_%s/integrate.sh') % (args1.queue,basedir,procnamebase,procname))
 
 
            
