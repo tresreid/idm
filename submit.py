@@ -1,252 +1,168 @@
 #! /usr/bin/env python
-import os, sys
-import commands
-import pwd
-import argparse
-import logging
-from datetime import datetime
 
-eos='/afs/cern.ch/project/eos/installation/0.3.84-aquamarine/bin/eos.select'
-MGrelease='2.6.1'
-CMSSWrelease='CMSSW_7_1_30'
+# Official twiki:
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/QuickGuideMadGraph5aMCatNLO
+import os,sys
 
-def fileExistsInEos(user, filename):
-    ## I am afraid one has to make this folder first if not existed
-    exists = commands.getoutput('%s ls eos/cms/store/user/%s/gridpack/%s | wc -l' %(eos,user,filename)  )
-    if len(exists.splitlines()) > 1: 
-       exists = exists.splitlines()[1]
+def replace_gridpack_generation():
+    '''
+        official gridpack_generation.sh load extra models
+        from central afs directory. One needs to write 
+        permission to put his/her UFO there. This is of
+        course doable, by submitting request:
+        https://twiki.cern.ch/twiki/bin/view/CMS/GeneratorWebRepo
+
+        But for private production and avoid such hassle,
+        the workaround is download it from a controllable place.
+        The benefit is to keep most other part intact, while 
+        minimum changes if official production is desired.
+    '''
+    cwd = os.getcwd()
+    os.chdir( cwd+'/../' )
+    if not os.path.isfile('gridpack_generation.sh'):
+        sys.exit('gridpack_generation.sh Not exist!! exiting..')
+    if not os.path.isfile('gridpack_generation.sh.bkp'):
+        # backing up
+        cmd = 'cp gridpack_generation.sh gridpack_generation.sh.bkp'
+        os.system(cmd)
+
+        replaceWith = 'wget --no-check-certificate https://wsi.web.cern.ch/wsi/mc/$model'
+        toBeReplaced = 'wget --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model'
+        cmd = 'sed -i "s#%s#%s#g" gridpack_generation.sh' % (toBeReplaced, replaceWith)
+        print cmd
+        os.system(cmd)
     else:
-       exists = exists.splitlines()[0]
-    #print exists
-    return int(exists) == 1
+        print 'gridpack_generation.sh already replaced.'
+    os.chdir(cwd)
 
+def format_template(template, paramMap):
+    for p in paramMap:
+        template = template.replace(p, paramMap[p])
+    return template
 
-if __name__ == '__main__':
-    
-    aparser = argparse.ArgumentParser(description='Process benchmarks.')
-    aparser.add_argument('-carddir', '--carddir', action='store', dest='carddir',
-            default='Cards/psdcalar_darkphoton_13TeV-madgraph', help='carddir')
-    aparser.add_argument('-q', '--queue', action='store', dest='queue',
-            default='2nw', help='queue')
-    aparser.add_argument('-dm', '--dmrange', dest='dmrange', nargs='+', type=int,
-            default=[50], help='dark matter mass range')
-    aparser.add_argument('-med', '--medrange', dest='medrange', nargs='+', type=float,
-            default=[0.4], help='mediator mass range')
-    aparser.add_argument('-dw', '--dwrange', dest='dwrange', nargs='+', type=float,
-            default=[2e-12], help='mediator decay width range')
-    aparser.add_argument('-release', '--release', dest='release', action='store',
-            default='2.6.1', help='MG version')
-    aparser.add_argument('-runcms', '--runcms', action='store', dest='runcms',
-            default='runcmsgrid_LO.sh', help='runcms')
-    args = aparser.parse_args()
-    if args.release:
-        MGrelease=args.release
+def stringfy_friendly(num):
+    '''
+        0.4 -> '0p4'
+        125 -> '125'
+    '''
+    if isinstance(num, int):
+        return str(num)
+    elif isinstance(num, float):
+        if int(num*100) > 0:
+            num = round(num, 2)
+            return str(num).replace('.', 'p') if '.' in str(num) else str(num)
+        else:
+            num = '%.2e' % num
+            return num.replace('.', 'p')
+    else:
+        raise ValueError("{0} is not a number!".format(num))
 
-    logfn = datetime.now().strftime('%Y%b%d-%H%M')+ \
-            '_'+args.carddir.split('/')[1].replace('_','-')+'.log'
-    if not os.path.isdir('Logs'): os.mkdir('Logs')
-    logging.basicConfig(level=logging.INFO, filename='Logs/{0}'.format(logfn))
-
-    logging.info('{0:15}:{1}'.format('carddir', args.carddir))
-    logging.info('{0:15}:{1}'.format('queue',   args.queue))
-    logging.info('{0:15}:{1}'.format('dmrange', args.dmrange))
-    logging.info('{0:15}:{1}'.format('medrange',args.medrange))
-
-    user = pwd.getpwuid(os.getuid()).pw_name
-    basedir = os.getcwd()
-    carddirAbsPath = os.path.join(basedir,args.carddir)
-
-    tempFile = [f for f in os.listdir(carddirAbsPath) if f.endswith('~')]
-    if len(tempFile) > 0:
-        os.system('rm %s/*~' % (carddirAbsPath))
-    paramdirs  = [f for f in os.listdir(carddirAbsPath) if os.path.isdir(carddirAbsPath+'/'+f)]
-    paramfiles = [f for f in os.listdir(carddirAbsPath) if os.path.isfile(carddirAbsPath+'/'+f)]
-
-    mgcf = [f for f in paramfiles if 'madconfig' in f]
-    proc = [f for f in paramfiles if 'proc' in f]
-    cust = [f for f in paramfiles if 'custom' in f]
-    spin = [f for f in paramfiles if 'madspin' in f]
-    rwgt = [f for f in paramfiles if 'reweight' in f]
-    #rtct = [f for f in paramfiles if 'mass' in f]
-
-    logging.info('{0:15}:{1}'.format('madconfig', str(mgcf)))
-    logging.info('{0:15}:{1}'.format('proc',      str(proc)))
-    logging.info('{0:15}:{1}'.format('custom',    str(cust)))
-    logging.info('{0:15}:{1}'.format('madspin',   str(spin)))
-    logging.info('{0:15}:{1}'.format('reweight',  str(rwgt)))
-    #logging.info('{0:15}:{1}'.format('mass',      str(rtct)))
-
-    if len(proc) != 1:
-        logging.error('process file does not exist or more than one! exiting..')
-        sys.exit('ERROR on process file.')
-    if len(mgcf) != 1:
-        logging.error('config file does not exist or more than one! exiting..')
-        sys.exit('ERROR on madconfig file.')
-    if len(paramdirs) != 1:
-        logging.error('model folder does not exist or more than one! exiting..')
-        sys.exit('ERROR on model folder.')
-
-    cmd = "cat %s | grep output | awk \'{print $2}\' " % (os.path.join(carddirAbsPath, proc[0]))
-    procnamebase = commands.getoutput(cmd)
-    logging.info('Process base name: {0}'.format(procnamebase))
-
-    cmsswtmp = '/tmp/{0}/{1}'.format(user, CMSSWrelease)
-    mgtmp    = '/tmp/{0}/{1}'.format(user, 'MG5_aMC_v'+MGrelease)
-    if os.path.isdir(cmsswtmp):
-        cmd = 'rm -rf {0}'.format(cmsswtmp)
-        logging.info('{0} exists, cleaning... {1}'.format(cmsswtmp, cmd))
-        os.system(cmd)
-    if os.path.isdir(mgtmp):
-        cmd = 'rm -rf {0}'.format(mgtmp)
-        logging.info('{0} exists, cleaning... {1}'.format(mgtmp, cmd))
+def create_parametrized_cards(tempDir, tag, params):
+    '''
+        copying template cards folder into MadGraph5_aMCatNLO/cards
+        with parametrization
+    '''
+    cwd = os.getcwd()
+    os.chdir('cards')
+    if os.path.isdir(tag):
+        os.system('cp -r {0}/* {1}'.format(tempDir, tag))
+    else:
+        os.system('cp -r {0} {1}'.format(tempDir, tag))
+    os.chdir(tag)
+    for f in os.listdir(os.getcwd()):
+        if 'custom' in f:
+            program_customizecards(f, params)
+            target = tag+'_customizecards.dat'
+        elif 'proc' in f:
+            program_proccard(f, tag)
+            target = tag+'_proc_card.dat'
+        elif 'extramodels' in f:
+            target = tag+'_extramodels.dat'
+        elif 'run_card' in f:
+            target = tag+'_run_card.dat'
+        elif 'param_card' in f:
+            target = tag+'_param_card.dat'
+        else:
+            sys.exit('unknown card exist! --> {0}'.format(f))
+        cmd = 'mv {0} {1}'.format(f, target)
         os.system(cmd)
 
-    #cmd = './doinstall.sh {0}'.format(MGrelease)
-    logging.info('Installing MG... >>{0}'.format(cmd))
-    os.system(cmd)
-    MGrelease = MGrelease.replace('.', '_')
-    mginstalled = procnamebase+'MG5_aMC_v'+MGrelease
-    os.system('mv {0} {1}'.format('MG5_aMC_v'+MGrelease, mginstalled))
-    logging.info('Madgraph has been installed successfully as {0}'.format(mginstalled))
-
-    os.chdir(mginstalled)
-    ## copy predefined madconfig, and start madgraph with it.
-    cmd = 'cp {0} .'.format(os.path.join(carddirAbsPath, mgcf[0]))
-    logging.info(cmd)
-    os.system(cmd)
-    cmd = './bin/mg5_aMC {0}'.format(mgcf[0])
-    logging.info('Starting madgraph!! >>'+cmd)
+    os.chdir(cwd)
+    if not os.path.isdir('../cards/'+tag):
+        cmd = 'cp -r cards/{0} ../cards/'.format(tag)
+    else:
+        cmd = 'cp -r cards/{0}/* ../cards/{0}'.format(tag)
     os.system(cmd)
 
-    logging.info('Loading model..')
-    ## copy input UFO files into ./models folder
-    cmd = 'cp -r {0} models/'.format(os.path.join(carddirAbsPath, paramdirs[0]))
-    os.system(cmd)
-    os.chdir('models/{0}'.format(paramdirs[0]))
-    #os.system('python write_param_card.py')
-    logging.info('Model loaded!')
-
-    ## changing to madgraph directory
-    os.chdir(os.path.join(basedir, mginstalled))
-
-
-    params = [(dm, med, dw) for dm in args.dmrange for med in args.medrange for dw in args.dwrange]
+def program_customizecards(f, params):
     for p in params:
-
-        dm, med, dw = p
-        dl = (dm/med)*(2e-14/dw) # decay length
-
-        dmstr = str(dm)
-        medstr = str(med).replace('.', 'p') if '.' in str(med) else str(med)
-        dlstr = str(dl).replace('.', 'p') if '.' in str(dl) else str(dl)
-        procname = procnamebase.replace('XMASS', dmstr).replace('MED', medstr).replace('LENGTH', dlstr)
-
-        logging.info('creating models for param: (dm, med, dw): ({0}).'.format(str(p)))
-        customizedModelDirName = '_'.join([paramdirs[0], dmstr, medstr, dlstr])
-        ## copying input UFO folders into ./models, with paramtrized name
-        cmd = 'cp -r {0} models/{1}'.format(os.path.join(carddirAbsPath, paramdirs[0]),
-                                            customizedModelDirName)
-        logging.info(cmd)
+        cmd = 'sed -i "s#%s#%s#g" %s' % (p, str(params[p]), f)
         os.system(cmd)
 
-        #paramFilesToRun = [f for f in os.listdir(os.path.join(os.getcwd(), 'models', customizedModelDirName)) \
-        #        if os.path.isfile(os.path.join(os.getcwd(), 'models', customizedModelDirName, f))]
-        #procToBeSed = [f for f in paramFilesToRun if 'proc' in f]
-        #custToBeSed = [f for f in paramFilesToRun if 'custom' in f]
-        os.system('rm -rf {0}/*py~'.format(os.path.join(os.getcwd(), 'models', customizedModelDirName)))
-        paramInModelToBeSed = os.path.join(os.getcwd(), 'models', customizedModelDirName, 'parameters.py')
-        
-        cmd = 'sed -i "s/{0}/{1}/g" {2}'
-        os.system(cmd.format('X_MZP_X', str(med), paramInModelToBeSed))
-        os.system(cmd.format('X_MPS_X', str(dm), paramInModelToBeSed))
+def program_proccard(f, tag):
+    inf = open(f, 'r')
+    otf = open(f+'.tmp', 'w')
+    for line in inf:
+        if line.split()[0] == 'output':
+            line = ' '.join([line.split()[0], tag, line.split()[-1]])
+        otf.write(line)
+    inf.close()
+    otf.close()
+    os.system('mv {0} {1}'.format(f+'.tmp', f))
 
-        #os.system(cmd.format('XMASS', dmstr,  procToBeSed[0]))
-        #os.system(cmd.format('MED',   medstr, procToBeSed[0]))
-        #os.system(cmd.format('LENGTH',dlstr,  procToBeSed[0]))
-        #os.system(cmd.format('XMASS', dmstr,  custToBeSed[0]))
-        #os.system(cmd.format('MED', str(med), custToBeSed[0]))
-        #os.system(cmd.format('WIDTH', str(dw),custToBeSed[0]))
+def run_gridpack_generation(tag):
+    '''
+    ./gridpack_generation.sh <name of process card without _proc_card.dat>
+    <folder containing cards relative to current location>
+    '''
+    cwd = os.getcwd()
+    os.chdir(cwd+'/../')
+    if os.path.isdir(tag):
+        print "Remenant exists! Cleaning.. ",
+        os.system('rm -rf '+tag)
+        print "Cleaned!"
+    cmd = './gridpack_generation.sh {0} cards/{0} 1nd'.format(tag)
+    print cmd
+    os.system(cmd)
+    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz %s.tar.xz' % (tag, tag)
+    print cmd
+    os.system(cmd)
+    # clean working directory, it's useless
+    os.system('rm -rf %s &' % tag)
+    os.chdir(cwd)
 
-        os.chdir('models/'+customizedModelDirName)
-        os.system('python write_param_card.py')
+def lsf_submit(tag):
+    '''
+    ./submit_gridpack_generation.sh <memoryInMBytes> <diskInMBytes>
+    <queueForMasterJob> <name of process card without _proc_card.dat> <folder
+    containing cards relative to current location> <queue>
+    '''
+    cwd = os.getcwd()
+    os.chdir(cwd+'/../')
+    #cmd = './submit_gridpack_generation.sh 15000 15000 2nw {0} cards/{0} 8nh'.format(tag)
+    cmd = './submit_gridpack_generation.sh 15000 15000 8nh {0} cards/{0} 8nh'.format(tag)
+    os.system(cmd)
+    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz %s.tar.xz' % (tag, tag)
+    os.chdir(cwd)
 
-        ## going back to madgraph directory
-        os.chdir(os.path.join(basedir, mginstalled))
-        ## making a directory containing all the input cards, with procname as suffix..
-        customizedCardDirName = 'MG_{0}'.format(procname)
-        os.system('mkdir {0}'.format(customizedCardDirName))
+if __name__ == "__main__":
+    replace_gridpack_generation()
+    template = 'SIDMmumu_Mps-XMASS_MZp-MED_ctau-DLENGTH'
+    
+    mps = 200
+    med = 1.2
+    #dw  = 6.6e-15
+    epsilon = 2.36e-5
+    tempDir = 'dp_mumu'
 
-        for f in paramfiles:
-            os.system('cp {0}/{1} {2}'.format(carddirAbsPath, f, customizedCardDirName))
+    #ctau = round(2e-14/dw, 2)
+    ctau = 0.08 * (0.1/med) * (1e-4/epsilon)**2 * 0.1 #cm
+    rawParams = {'XMASS': mps, 'MED': med, 'EPSILON': epsilon}
+    tagParams = {'XMASS': stringfy_friendly(mps), 'MED': stringfy_friendly(med), 'DLENGTH': stringfy_friendly(ctau)}
+    tag = format_template(template, tagParams)
 
-        os.system(cmd.format('XMASS', dmstr,  'MG_'+procname+'/'+proc[0]))
-        os.system(cmd.format('MED',   medstr, 'MG_'+procname+'/'+proc[0]))
-        os.system(cmd.format('LENGTH',dlstr,  'MG_'+procname+'/'+proc[0]))
-        os.system(cmd.format('XMASS', dmstr,  'MG_'+procname+'/'+cust[0]))
-        os.system(cmd.format('MED', str(med), 'MG_'+procname+'/'+cust[0]))
-        os.system(cmd.format('WIDTH', str(dw),'MG_'+procname+'/'+cust[0]))
+    create_parametrized_cards(tempDir, tag, rawParams)
+    os.system('ls -alrth ../cards')
+    #run_gridpack_generation(tag)
+    lsf_submit(tag)
 
-        jobFn = os.path.join(basedir, mginstalled, customizedCardDirName, 'integrate.sh')
-        jobF = open(jobFn, 'w')
-        
-        jobF.write('#!/bin/bash\n')
-        jobF.write('cp -r {0} .\n'.format(os.path.join(basedir, mginstalled, customizedCardDirName)))
-        jobF.write('''
-user=`id -u -n`
-if [ ! -d "/tmp/$user/CMSSW_7_1_30" ]; then
-    cd /tmp/$user
-    scramv1 project CMSSW CMSSW_7_1_30
-fi 
-cd /tmp/$user/CMSSW_7_1_30/src
-
-eval `scramv1 runtime -sh`
-LHAPDFCONFIG=`echo "$LHAPDF_DATA_PATH/../../bin/lhapdf-config"`
-LHAPDFINCLUDES=`$LHAPDFCONFIG --incdir`
-LHAPDFLIBS=`$LHAPDFCONFIG --libdir`\n''')
-        jobF.write('cd {0}\n'.format(os.path.join(basedir, mginstalled, customizedCardDirName)))
-        jobF.write('{0}/bin/mg5_aMC {1}\n'.format(os.path.join(basedir, mginstalled), proc[0]))
-
-        ## above will output a folder named as procname
-        jobF.write('cp {0} {1}\n'.format(cust[0], procname))
-        jobF.write('cd {0}\n'.format(procname))
-
-        for f in paramfiles:
-            if 'dat' in f:
-                jobF.write('mv ../{0} Cards \n'.format(f))
-        jobF.write('echo "done" >> makegrid.dat \n')
-        jobF.write('cat {0} >> makegrid.dat \n'.format(cust[0]))
-        jobF.write('echo "set gridpack true" >> makegrid.dat \n')
-        jobF.write('echo "" >> makegrid.dat \n')
-        jobF.write('echo "done" >> makegrid.dat \n')
-        jobF.write('cat makegrid.dat | ./bin/generate_events pilotrun \n')
-        jobF.write('cd .. \n')
-        jobF.write('mkdir process \n')
-        jobF.write('mv {0}/pilotrun_gridpack.tar.gz process \n'.format(procname))
-        jobF.write('mv {0}/Events/pilotrun/unweighted_events.lhe.gz process \n'.format(procname))
-        jobF.write('cd process \n')
-        jobF.write('tar xzf pilotrun_gridpack.tar.gz  \n')
-        jobF.write('rm pilotrun_gridpack.tar.gz  \n')
-        jobF.write('echo "mg5_path = ../../mgbasedir" >> ./madevent/Cards/me5_configuration.txt \n')
-        jobF.write('echo "run_mode = 0" >> ./madevent/Cards/me5_configuration.txt \n')  
-        jobF.write('cd .. \n')
-        jobF.write('cp %s/cleangridmore.sh .    \n'  % (basedir))
-        jobF.write('cp %s/%s runcmsgrid.sh      \n'  % (basedir,args.runcms))
-        jobF.write('./cleangridmore.sh          \n')
-        jobF.write('mkdir  mgbasedir     \n')
-        
-        for d in ['MadSpin', 'SysCalc', 'input', 'HELAS', 'README', 'Template', 'VERSION', 'aloha', \
-                'bin', 'madconfig', 'madgraph', 'mg5decay', 'models', 'tests', 'vendor', 'PLUGIN']:
-            jobF.write('cp -r {0} mgbasedir \n'.format(os.path.join(basedir, mginstalled ,d)))
-
-        output = '{0}_tarball.tar.xz'.format(procname)
-        jobF.write('XZ_OPT="--lzma2=preset=9,dict=512MiB" tar -cJpsf {0} mgbasedir process runcmsgrid.sh \n'.format(output))
-        jobF.write(('rm   /eos/user/%s/%s/gridpacks/%s  \n') % (user[0],user,output))
-        jobF.write(('scp %s  /eos/user/%s/%s/gridpacks/%s  \n') % (output,user[0],user,output))
-        jobF.close()
-
-        os.chmod(jobFn, 0777)
-
-        if not fileExistsInEos(user, output):
-            cmd = 'bsub -q {0} -R "rusage[mem=12000]" {1}'.format(args.queue, jobFn)
-            logging.info(cmd)
-            os.system(cmd)

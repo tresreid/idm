@@ -1,5 +1,0 @@
-import pscalar_darkphoton_UFO_XMASS_MED_LENGTH -modelname
-# Define multiparticle labels
-#generate       p p > pscalar, (pscalar > zp zp, zp > e+ e-)
-generate       p p > pscalar, (pscalar > zp zp, zp > mu+ mu-)
-output DarkPhoton_LO_Mps-XMASS_MZp-MED_ct-LENGTH_13TeV-madgraph

@@ -1,5 +1,0 @@
-#put card customizations here (change top and higgs mass for example)
-#32 --> dark photon mass ; 35 pseudoscalar mass
-set param_card mass  35 XMASS
-set param_card mass  32 MED
-set param_card decay 32 WIDTH
