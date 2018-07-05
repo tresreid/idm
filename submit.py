@@ -124,12 +124,17 @@ def run_gridpack_generation(tag):
     cmd = './gridpack_generation.sh {0} cards/{0} 1nd'.format(tag)
     print cmd
     os.system(cmd)
-    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz %s.tar.xz' % (tag, tag)
+    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz GridPacker/producedgridpacks/%s.tar.xz' % (tag, tag)
     print cmd
     os.system(cmd)
     # clean working directory, it's useless
     os.system('rm -rf %s &' % tag)
     os.chdir(cwd)
+    print cwd
+    cms = './extractLHEFromGridpack.py producedgridpacks/%s.tar.xz' %(tag)
+    os.system(cms)
+    cms = 'gzip LHEs/%s.lhe'%tag
+    os.system(cms)
 
 def lsf_submit(tag):
     '''
@@ -142,8 +147,14 @@ def lsf_submit(tag):
     #cmd = './submit_gridpack_generation.sh 15000 15000 2nw {0} cards/{0} 8nh'.format(tag)
     cmd = './submit_gridpack_generation.sh 15000 15000 8nh {0} cards/{0} 8nh'.format(tag)
     os.system(cmd)
-    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz %s.tar.xz' % (tag, tag)
+    cmd = 'mv %s_slc6_amd64_gcc481_CMSSW_7_1_30_tarball.tar.xz GridPacker/producedgridpacks/%s.tar.xz' % (tag, tag)
+    os.system(cmd)
     os.chdir(cwd)
+    #os.chdir(cwd+'/GridPacker')
+#    cms = './extractLHEFromGridpack.py producedgridpacks/%s.tar.xz' %(tag)
+ #   os.system(cms)
+  #  cms = 'gzip LHEs/SIDM-%s.tar.xz.lhe'%tag
+   # os.system(cms)
 
 if __name__ == "__main__":
     replace_gridpack_generation()
@@ -152,17 +163,24 @@ if __name__ == "__main__":
     mps = 200
     med = 1.2
     #dw  = 6.6e-15
-    epsilon = 2.36e-5
+    #epsilon = 8.165e-6
+    #epsilon = 7.45356e-5 #.1
+    #epsilon = 2.357e-5 #1
+    #epsilon = 7.45356e-6 #10
+    #epsilon = 3.333e-6 #50
+    #epsilon = 2.357e-6 #100
+    epsilon = 1.36083e-6 #300
+
     tempDir = 'dp_mumu'
 
     #ctau = round(2e-14/dw, 2)
-    ctau = 0.08 * (0.1/med) * (1e-4/epsilon)**2 * 0.1 #cm
+    ctau = 0.08 * (0.1/med) * (1.0e-4/epsilon)**2 * 0.1 #cm
     rawParams = {'XMASS': mps, 'MED': med, 'EPSILON': epsilon}
     tagParams = {'XMASS': stringfy_friendly(mps), 'MED': stringfy_friendly(med), 'DLENGTH': stringfy_friendly(ctau)}
     tag = format_template(template, tagParams)
 
     create_parametrized_cards(tempDir, tag, rawParams)
     os.system('ls -alrth ../cards')
-    #run_gridpack_generation(tag)
-    lsf_submit(tag)
+    run_gridpack_generation(tag)
+    #lsf_submit(tag)
 
