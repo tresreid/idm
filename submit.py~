@@ -158,25 +158,25 @@ def lsf_submit(tag):
 
 if __name__ == "__main__":
     replace_gridpack_generation()
-    template = 'SIDMmumu_Mps-XMASS_MZp-MED_ctau-DLENGTH'
+    template = 'iDM_Mchi-XMASS_dMchi-XHS_mZD-MED_wchi-WIDTH'
+    #template = 'iDMmumu_Mps-XMASS_MZp-MED_ctau-DLENGTH'
     
-    mps = 200
-    med = 1.2
-    #dw  = 6.6e-15
-    #epsilon = 8.165e-6
-    #epsilon = 7.45356e-5 #.1
-    #epsilon = 2.357e-5 #1
-    #epsilon = 7.45356e-6 #10
-    #epsilon = 3.333e-6 #50
-    epsilon = 2.357e-6 #100
+    mchi =52.5
+    dmchi =5.0
+    mzd = 150
+    wchi = 1000023
+    #mps = 200
+    #med = 1.2
     #epsilon = 1.36083e-6 #300
 
-    tempDir = 'dp_mumu'
+    tempDir = 'iDM_models'
 
     #ctau = round(2e-14/dw, 2)
-    ctau = 0.08 * (0.1/med) * (1.0e-4/epsilon)**2 * 0.1 #cm
-    rawParams = {'XMASS': mps, 'MED': med, 'EPSILON': epsilon}
-    tagParams = {'XMASS': stringfy_friendly(mps), 'MED': stringfy_friendly(med), 'DLENGTH': stringfy_friendly(ctau)}
+    #ctau = 0.08 * (0.1/med) * (1.0e-4/epsilon)**2 * 0.1 #cm
+    #rawParams = {'XMASS': mps, 'MED': med, 'EPSILON': epsilon}
+    #tagParams = {'XMASS': stringfy_friendly(mps), 'MED': stringfy_friendly(med), 'DLENGTH': stringfy_friendly(ctau)}
+    rawParams = {'XMASS': mchi,'XHS': dmchi, 'MED': mzd, 'WIDTH': wchi}
+    tagParams = {'XMASS': stringfy_friendly(mchi),'XHS':stringfy_friendly(dmchi), 'MED': stringfy_friendly(mzd), 'WIDTH': stringfy_friendly(wchi)}
     tag = format_template(template, tagParams)
 
     create_parametrized_cards(tempDir, tag, rawParams)

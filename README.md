@@ -9,7 +9,7 @@ However, as parameters are highly model-dependent, to make everything working
 smoothly for your model, one need to take care of the following things:
 
 1. **cards template**
-e.g. [cards/dp_mumu](https://github.com/phylsix/GridPacker/tree/sidm-branch/cards/dp_mumu)
+e.g. [cards/iDM_models](https://github.com/tresreid/iDM/cards/iDM_models)
 
 It contains 4 .dat files:
 ```
