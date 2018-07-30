@@ -1,3 +1,5 @@
+#modified from weinan's scripts
+
 # GridPacker under genproductions
 
 ## Notes
@@ -36,18 +38,16 @@ The model file should be put in a public downloadable place.
 
 In https://github.com/phylsix/GridPacker/blob/sidm-branch/submit.py#L150-L162
 ```
-    template = 'SIDMmumu_Mps-XMASS_MZp-MED_ctau-DLENGTH'
+    template = 'iDM_Mchi-XMASS_dMchi-XHS_mZD-MED_Wchi2-WIDTH'
     
-    mps = 200
-    med = 1.2
-    #dw  = 6.6e-15
-    epsilon = 2.36e-5
+    mchi = 6.0
+    dmchi = 2.0
+    mzd = 15
+    wchi = 1.00e-3
     tempDir = 'dp_mumu'
 
-    #ctau = round(2e-14/dw, 2)
-    ctau = 0.08 * (0.1/med) * (1e-4/epsilon)**2 * 0.1 #cm
-    rawParams = {'XMASS': mps, 'MED': med, 'EPSILON': epsilon}
-    tagParams = {'XMASS': stringfy_friendly(mps), 'MED': stringfy_friendly(med), 'DLENGTH': stringfy_friendly(ctau)}
+    rawParams = {'XMASS': mchi,'XHS':dmchi, 'MED': mzd, 'WIDTH: wchi}
+    tagParams = {'XMASS': stringfy_friendly(mchi), 'XHS':stringfy_friendly(dmchi),'MED': stringfy_friendly(mzd), 'WIDTH': stringfy_friendly(wchi)}
     tag = format_template(template, tagParams)
 ```
 Above, I create a string which will be used for the naming of the generated gridpack. Then I specify parameter values.
@@ -65,6 +65,18 @@ There are 2 ways working,
 
 One can choose either one by commenting out the other.
 
+5. **lifetime replacement**
+we make the lhe file from the tarball and manually replace the lifetimes for the desired particle using the script `replaceLHELifetime.py`.
+To do this, we copy the tarball and rename it including the string '_ctau-###_' where ### is the desired lifetime (in cm). 
+We then create the lhe by calling `extractLHEFromGridpack.py [gridpack]`. This creates the LHE in the directory LHEs.
+We can then call the script `replaceLHELifetime.py -i [lhe] -t [ctau (in mm)]`. This will replace the lifetimes for the particle chosen in the script (I manually change the particle id within the script; however, it can be given as an argument)
+You can check the replacement by running `lhe_tester.py -i [lhe]`. 
+Finally, gzip the lhe before submitting it to the MiniAOD producer. 
+
+Many of these steps can be done in bulk with some scripts.
+producedgridpacks/addlife.py can rename the gridpacks with the lifetimes in bulk.
+prepLHE.py will extract the gridpacks, replace the lifetimes and gzip the results all in bulk. 
+
 ## Instructions
 **step1: clone genproductions repo**
 ```
@@ -78,7 +90,7 @@ git clone git@github.com:cms-sw/genproductions.git genproductions -b mg26x
 **step2: clone GridPacker repo**
 ```
 cd genproductions/bin/MadGraph5_aMCatNLO/
-git clone https://github.com/phylsix/GridPacker.git GridPacker -b sidm-branch
+git clone git@github.com:tresreid/idm.git
 cd GridPacker
 ```
 
@@ -87,7 +99,14 @@ cd GridPacker
 # after setting parameters..
 ./submit.py
 ```
-
+**step4: make lifetimes
+```
+cp [gridpack] producedgridpacks
+cd producedgridpacks
+python addlife.py
+cd ..
+python prepLHE.py
+```
 ## Reference Twiki:
 1. https://twiki.cern.ch/twiki/bin/view/CMS/QuickGuideMadGraph5aMCatNLO
 2. https://twiki.cern.ch/twiki/bin/viewauth/CMS/GeneratorMain#How_to_produce_gridpacks
