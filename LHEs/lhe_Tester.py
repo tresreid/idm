@@ -1,0 +1,37 @@
+import argparse
+import os
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-i','--input', type=str, required=True)
+args= parser.parse_args()
+
+inFn = args.input
+rpid = 32
+ctau = float(5e14)
+
+inf = open(inFn,'r')
+eventBegin = False
+eventEnd = True
+
+for line in inf:
+	if line.startswith('<event>'):
+		eventBegin = True
+		eventEnd = False
+	if line.startswith('</event>'):
+		eventBegin = False
+		eventEnd = True
+	if not (eventBegin==True and eventEnd==False):
+	#	print line
+		continue
+	#if line.split()[0] != str(rpid):
+#	if (line.split()[0] != str(1023)):
+	#	print line
+#		continue
+	else:
+		if len(line.split())==13:
+			togo = line.split()
+			print togo[0], togo[11]
+			#togo[11] = '{0:.5}'.format(ctau)
+			#print togo[0], togo[11]
+inf.close()
+

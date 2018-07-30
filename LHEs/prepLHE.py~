@@ -1,0 +1,19 @@
+import os, sys
+import subprocess
+
+gridpackdir = os.listdir(os.getcwd()+"/../producedgridpacks/")
+
+for f in gridpackdir:
+	if('iDM_Mchi' in f) and ('ctau' in f):
+		ctau_str = f.split('ctau-')[1].split('_tarball')[0]
+		ctau = float(ctau_str.replace('p','.'))*10
+		print ctau
+		print f
+		cmd1 = 'python ../extractLHEFromGridpack.py ../producedgridpacks/%s' %(f)
+		process = subprocess.Popen(cmd1,shell=True, stdout=subprocess.PIPE)
+		for line in iter(process.stdout.readline,b''):
+			print line,
+		process.stdout.close()
+		process.wait()
+		print done
+		break

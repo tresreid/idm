@@ -1,4 +1,5 @@
 set param_card dm Mchi XMASS
 set param_card dm dMchi XHS
 set param_card hidden mZDinput MED
-set param_card decay WIDTH 1.970000e-15
+set param_card decay WZp 1e-3
+set param_card decay 1000023 WIDTH

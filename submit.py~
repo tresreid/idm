@@ -26,7 +26,8 @@ def replace_gridpack_generation():
         cmd = 'cp gridpack_generation.sh gridpack_generation.sh.bkp'
         os.system(cmd)
 
-        replaceWith = 'wget --no-check-certificate https://wsi.web.cern.ch/wsi/mc/$model'
+        #replaceWith = 'wget --no-check-certificate https://wsi.web.cern.ch/wsi/mc/$model'
+        replaceWith = 'wget --no-check-certificate https://mireid.web.cern.ch/mireid/$model'
         toBeReplaced = 'wget --no-check-certificate https://cms-project-generators.web.cern.ch/cms-project-generators/$model'
         cmd = 'sed -i "s#%s#%s#g" gridpack_generation.sh' % (toBeReplaced, replaceWith)
         print cmd
@@ -158,16 +159,31 @@ def lsf_submit(tag):
 
 if __name__ == "__main__":
     replace_gridpack_generation()
-    template = 'iDM_Mchi-XMASS_dMchi-XHS_mZD-MED_wchi-WIDTH'
+    #template = 'iDM_Mchi-XMASS_dMchi-XHS_mZD-MED_ctau-WIDTH'
+    template = 'iDM_Mchi-XMASS_dMchi-XHS_mZD-MED_Wchi2-WIDTH'
     #template = 'iDMmumu_Mps-XMASS_MZp-MED_ctau-DLENGTH'
     
-    mchi =52.5
-    dmchi =5.0
+    mchi =6.0
+    dmchi = 2.0
     mzd = 150
-    wchi = 1000023
-    #mps = 200
-    #med = 1.2
-    #epsilon = 1.36083e-6 #300
+    wchi = 1.00e-3
+ #   wchi = 1.97e-17
+#    wchi = 10000.23 #1000cm lifetime
+#    wchi = 100002.3 #100cm lifetime
+#    wchi = 1000023 #10cm lifetime
+#    wchi = 10000230 #1cm lifetime
+#    wchi = 100002300 #.10cm lifetime
+#    ctau = 1.2e-3 #.10cm
+#    ctau = 0.012 # 1 cm
+#    ctau = 0.12 # 10 cm
+#    ctau = 0.6 #50 cm
+#    ctau = 1.2 # 100 cm
+#    ctau = 12.0 # 1000 cm
+    #ctau = 0.1
+    #ctau = 1
+    #ctau = 10
+    #ctau = 100
+    #ctau = 1000
 
     tempDir = 'iDM_models'
 
@@ -181,6 +197,6 @@ if __name__ == "__main__":
 
     create_parametrized_cards(tempDir, tag, rawParams)
     os.system('ls -alrth ../cards')
-    run_gridpack_generation(tag)
-    #lsf_submit(tag)
+  #  run_gridpack_generation(tag)
+    lsf_submit(tag)
 
